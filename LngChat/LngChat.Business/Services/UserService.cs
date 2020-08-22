@@ -1,5 +1,5 @@
 ﻿using LangChat.Business.Models;
-using LangChat.Data;
+using LngChat.Data;
 using System;
 using System.Threading.Tasks;
 
