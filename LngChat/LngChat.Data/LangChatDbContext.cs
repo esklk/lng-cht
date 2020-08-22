@@ -1,15 +1,10 @@
-﻿using LangChat.Data.Models;
+﻿using LngChat.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace LangChat.Data
+namespace LngChat.Data
 {
     public class LngChatDbContext : DbContext
     {
-        public LngChatDbContext(DbContextOptions<LngChatDbContext> options) : base(options)
-        {
-
-        }
-
         public DbSet<User> Users { get; set; }
         
         public DbSet<Chat> Chats { get; set; }
@@ -17,5 +12,18 @@ namespace LangChat.Data
         public DbSet<Message> Messages { get; set; }
         
         public DbSet<LanguageInfo> LanguageInfos { get; set; }
+
+        public LngChatDbContext(DbContextOptions<LngChatDbContext> options) : base(options)
+        {
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserChat>()
+                .HasKey(x => new { x.ChatId, x.UserId });
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

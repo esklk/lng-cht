@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LangChat.Data.Models
+namespace LngChat.Data.Models
 {
     public class Chat
     {
@@ -8,7 +8,7 @@ namespace LangChat.Data.Models
 
         public string Name { get; set; }
 
-        public ICollection<User> Users { get; set; }
+        public ICollection<UserChat> UserChats { get; set; }
 
         public ICollection<Message> Messages { get; set; }
     }

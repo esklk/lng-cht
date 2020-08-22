@@ -1,4 +1,4 @@
-﻿namespace LangChat.Data.Models
+﻿namespace LngChat.Data.Models
 {
     public enum LanguageLevel
     {
