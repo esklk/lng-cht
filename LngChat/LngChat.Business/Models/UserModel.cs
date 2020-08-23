@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace LangChat.Business.Models
+namespace LngChat.Business.Models
 {
     public class UserModel
     {

@@ -1,4 +1,4 @@
-﻿namespace LangChat.Business.Models
+﻿namespace LngChat.Business.Models
 {
     public class LanguageInfoModel
     {

@@ -1,11 +1,11 @@
-﻿using LangChat.Business.Models;
+﻿using LngChat.Business.Models;
 using LngChat.Data;
 using System;
 using System.Threading.Tasks;
 
-namespace LangChat.Business.Services
+namespace LngChat.Business.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly LngChatDbContext _context;
 
@@ -26,7 +26,7 @@ namespace LangChat.Business.Services
             throw new NotImplementedException();
         }
 
-        public async Task DeleteUser(Guid userId) 
+        public async Task DeleteUser(Guid userId)
         {
             //TODO: find user by id and delete it
             throw new NotImplementedException();
