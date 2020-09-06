@@ -1,4 +1,5 @@
-﻿using LngChat.Business.Models;
+﻿using AutoMapper;
+using LngChat.Business.Models;
 using LngChat.Data;
 using System;
 using System.Threading.Tasks;
@@ -8,10 +9,12 @@ namespace LngChat.Business.Services
     public class UserService : IUserService
     {
         private readonly LngChatDbContext _context;
+        private readonly IMapper _mapper;
 
-        public UserService(LngChatDbContext context)
+        public UserService(LngChatDbContext context, IMapper mapper)
         {
-
+            _context = context;
+            _mapper = mapper;
         }
 
         public async Task<Guid> CreateUser(UserModel user)

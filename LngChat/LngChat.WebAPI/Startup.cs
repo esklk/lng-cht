@@ -1,17 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using LngChat.Business.MappingProfiles;
+using LngChat.Business.Services;
 using LngChat.Data;
+using LngChat.WebAPI.Settings;
+using LngChat.WebAPI.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LngChat.WebAPI
 {
@@ -27,9 +27,31 @@ namespace LngChat.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var langChatDbConnectionString = Configuration.GetConnectionString("LangChatDb");
+            var jwtOptions = Configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(x =>
+                {
+                    x.RequireHttpsMetadata = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateLifetime = true,
+                        ValidateIssuer = true,
+                        ValidateAudience = false,
+                        ValidIssuer = jwtOptions.Issuer,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = jwtOptions.SecurityKey
+                    };
+                });
 
-            services.AddDbContext<LngChatDbContext>(x => x.UseMySql(langChatDbConnectionString));
+            var langChatDbConnectionString = Configuration.GetConnectionString("LangChatDb");
+            services
+                .AddDbContext<LngChatDbContext>(x => x.UseMySql(langChatDbConnectionString))
+                .AddAutoMapper(typeof(DefaultMappingProfile))
+                .AddSingleton<IJwtOptions>(jwtOptions)
+                .AddSingleton<IAccessTokenGenerator, JwtAccessTokenGenerator>()
+                .AddScoped<IUserAccountService, UserAccountService>();
+
+
 
             services.AddControllers();
         }
@@ -42,16 +64,14 @@ namespace LngChat.WebAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseHttpsRedirection()
+                .UseRouting()
+                .UseAuthentication()
+                .UseAuthorization()
+                .UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                });
         }
     }
 }

@@ -5,7 +5,7 @@ namespace LngChat.Business.Models
 {
     public class UserModel
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public string Email { get; set; }
 
