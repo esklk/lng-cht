@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System.Linq;
 
 namespace LngChat.WebAPI
 {
@@ -43,12 +44,16 @@ namespace LngChat.WebAPI
                     };
                 });
 
+            var oAuthCredentials = Configuration.GetSection("OAuth").GetChildren().ToDictionary(k => k.Key, e => e.Get<OAuthCredentials>());
+
             var langChatDbConnectionString = Configuration.GetConnectionString("LangChatDb");
             services
                 .AddDbContext<LngChatDbContext>(x => x.UseMySql(langChatDbConnectionString))
                 .AddAutoMapper(typeof(DefaultMappingProfile))
                 .AddSingleton<IJwtOptions>(jwtOptions)
                 .AddSingleton<IAccessTokenGenerator, JwtAccessTokenGenerator>()
+                .AddSingleton(oAuthCredentials["Google"])
+                .AddScoped<ITokenValidator, GoogleTokenValidator>()
                 .AddScoped<IUserAccountService, UserAccountService>();
 
 

@@ -12,32 +12,30 @@ namespace LngChat.WebAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccessTokenGenerator _accessTokenGenerator;
+        private readonly ITokenValidator _tokenValidator;
         private readonly IUserAccountService _userAccountService;
 
-        public AccountController(IAccessTokenGenerator accessTokenGenerator, IUserAccountService userAccountService)
+        public AccountController(IAccessTokenGenerator accessTokenGenerator, ITokenValidator tokenValidator, IUserAccountService userAccountService)
         {
             _accessTokenGenerator = accessTokenGenerator;
+            _tokenValidator = tokenValidator;
             _userAccountService = userAccountService;
         }
 
         [HttpGet]
-        public async Task<object> Get(string googleToken)
+        public async Task<object> Get(string token)
         {
-
-            try
+            var result = await _tokenValidator.ValidateAsync(token);
+            if (!result.Success)
             {
-                var result = await GoogleJsonWebSignature.ValidateAsync(googleToken);
-
-                var (account, isNew) = await _userAccountService.GetUserAccountAsync(result.Email, result.GivenName, result.FamilyName);
-
-                var accessToken = _accessTokenGenerator.Generate(new[] { new Claim(ClaimTypes.NameIdentifier, account.UserId.ToString()) });
-
-                return new { accessToken, account, isNew };
+                return Unauthorized(result.ErrorMessage);
             }
-            catch (InvalidJwtException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
+
+            var (account, isNew) = await _userAccountService.GetUserAccountAsync(result.Email, result.FirstName, result.LastName);
+
+            var accessToken = _accessTokenGenerator.Generate(new[] { new Claim(ClaimTypes.NameIdentifier, account.UserId.ToString()) });
+
+            return new { accessToken, account, isNew };
         }
     }
 }
