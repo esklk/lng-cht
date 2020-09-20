@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Google.Apis.Auth;
 using LngChat.Business.Services;
@@ -35,7 +36,9 @@ namespace LngChat.WebAPI.Controllers
 
             var accessToken = _accessTokenGenerator.Generate(new[] { new Claim(ClaimTypes.NameIdentifier, account.UserId.ToString()) });
 
-            return new { accessToken, account, isNew };
+            Response.StatusCode = (int)(isNew ? HttpStatusCode.Created : HttpStatusCode.OK);
+
+            return new { accessToken, account };
         }
     }
 }
