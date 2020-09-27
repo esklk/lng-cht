@@ -1,0 +1,19 @@
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+}
+.container{
+    background-color: var(--bg-color-light);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 10px;
+    flex: 0 0 230px;
+    border-radius: 2px;
+}
+.container p{
+    text-align: center;
+}

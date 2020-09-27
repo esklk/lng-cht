@@ -1,17 +1,35 @@
-import React from "react";
+import React, { Component } from "react";
+import Header from "./Header/Header";
 import Login from "./Login/Login";
-import "bootstrap/dist/css/bootstrap.min.css";
+import Body from "./Body/Body";
+import { accountService } from "./Services/accountService";
 
-const onLoggedIn = (result) => {
-  console.log(result ? "Success!" : "Fail!");
-};
+export default class App extends Component {
+  constructor(props) {
+    super(props);
 
-function App() {
-  return (
-    <div className="wrapper d-flex justify-content-center align-content-center">
-      <Login onLoggedIn={onLoggedIn} />
-    </div>
-  );
+    this.state = {
+      currentUser: null,
+    };
+  }
+
+  componentDidMount() {
+    accountService.currentUser.subscribe((x) =>
+      this.setState({ currentUser: x })
+    );
+  }
+
+  render() {
+    const { currentUser } = this.state;
+    return (
+      <div className="main">
+        <Header />
+        {currentUser ? (
+          <Body />
+        ) : (
+          <Login />
+        )}
+      </div>
+    );
+  }
 }
-
-export default App;

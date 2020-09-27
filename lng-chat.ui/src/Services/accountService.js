@@ -19,16 +19,17 @@ function authenticate(token) {
     .httpGet("account", { token }, true)
     .then((response) => {
       return response.json().then((account) => {
-        return { account, isNew: response.status === 201 };
+        account.isNew = response.status === 201;
+        return account;
       });
     })
     .then((accountData) => {
       if (accountData) {
         localStorage.setItem(
           "currentUser",
-          JSON.stringify(accountData.account)
+          JSON.stringify(accountData)
         );
-        currentUserSubject.next(accountData.account);
+        currentUserSubject.next(accountData);
         return accountData;
       }
     })

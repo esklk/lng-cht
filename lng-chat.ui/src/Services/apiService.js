@@ -41,17 +41,18 @@ function execute(method, url, anonymous, body) {
     headers.Authorization = accountService.currentUser.accessToken;
   }
   return fetch(url, { method, headers, body }).then((response) => {
-    if (!response.ok) {
-      if (!anonymous && (response.status === 401 || response.status === 403)) {
-        accountService.logout();
-        window.location.reload(true);
-      }
-      console.error(
-        `Server responded to "${response.url}" with status code ${response.status}.`
-      );
-
-      return Promise.reject(response.statusText);
-      //throw response.statusText;
+    if (response.ok) {
+      return response;
     }
+
+    if (!anonymous && (response.status === 401 || response.status === 403)) {
+      accountService.logout();
+      window.location.href = window.location.origin;
+    }
+    console.error(
+      `Server responded to "${response.url}" with status code ${response.status}.`
+    );
+
+    return Promise.reject(response.statusText);
   });
 }

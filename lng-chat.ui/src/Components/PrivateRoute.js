@@ -1,16 +1,17 @@
 import React from 'react'
-import { Route, Redirect } from 'react-router-dom';
+import { Route } from 'react-router-dom';
+import {accountService} from "../Services/accountService";
 
-export default function PrivateRoute({ component, ...rest }) {
+export default function PrivateRoute({ component: Component, ...rest }) {
     return (
         <Route {...rest} render={props => {
-            const currentUser = authenticationService.currentUserValue;
+            const currentUser = accountService.currentUserValue;
             if (!currentUser) {
-                // not logged in so redirect to login page with the return url
-                return <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+                // not logged in so redirect to login page
+                window.location.href = window.location.origin;
             }
     
-            // authorised so return component
+            // authorized so return component
             return <Component {...props} />
         }} />
     )
