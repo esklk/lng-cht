@@ -14,56 +14,58 @@ import React from "react";
 import { Autocomplete, Alert } from "@material-ui/lab";
 import "./Settings.css";
 import ISO6391 from "iso-639-1";
+import { accountService } from "../Services/accountService";
+import RateableCheckbox from "../Components/RateableCheckbox";
+import RateableLanguageInfoList from "../Components/RateableLanguageInfoList";
 
 export default function Settings() {
+  const [lang, setLang] = React.useState(localStorage.getItem("lang"));
   const handleUILangChange = (event) => {
-    //TODO: set localstorage lang
+    let value = event.target.value;
+    setLang(value);
+    localStorage.setItem("lang", event.target.value);
   };
+
+  const [theme, setTheme] = React.useState(localStorage.getItem("theme"));
   const handleThemeChange = (event) => {
-    //TODO: set localsorage theme
+    let value = event.target.value;
+    setTheme(value);
+    localStorage.setItem("theme", value);
   };
 
   const langs = ISO6391.getLanguages(ISO6391.getAllCodes());
+  const user = accountService.currentUserValue.account;
+
+  const getFullUserLanguageList = (userLangs) =>
+    langs.map((lang) => {
+      let userLang = userLangs.filter((x) => x.code === lang.code)[0];
+      if (userLang) {
+        lang.checked = true;
+        lang.rate = userLang.level;
+      }
+      return lang;
+    });
+
+  const langsToLearn = getFullUserLanguageList(user.languagesToLearn);
+  const langsToTeach = getFullUserLanguageList(user.languagesToTeach);
 
   return (
     <div className="settings">
       <div className="setting-group">
-        <p>Profile settings:</p>
-        <TextField required label="First Name" />
-        <TextField required label="Last Name" />
-        <Autocomplete
-          multiple
-          options={langs}
-          getOptionLabel={(option) => option.nativeName}
-          defaultValue={[]}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="standard"
-              label="Languages to Learn"
-            />
-          )}
-        />
-        <Autocomplete
-          multiple
-          options={langs}
-          getOptionLabel={(option) => option.nativeName}
-          defaultValue={[]}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="standard"
-              label="Languages to Teach"
-            />
-          )}
-        />
+        <p className="setting-group-header">Profile settings:</p>
+        <TextField required value={user.firstName} label="First Name" />
+        <TextField required value={user.lastName} label="Last Name" />
+        <br/>
+        {/* This components slows down page loading. Think about control to select languages. */}
+        <RateableLanguageInfoList languages={langsToTeach} label="Languages to Teach"/>
+        <RateableLanguageInfoList languages={langsToLearn} label="Languages to Learn" />
         <br />
         <Button variant="contained" color="primary">
           Save
         </Button>
       </div>
       <div className="setting-group">
-        <p>Application Settings:</p>
+        <p className="setting-group-header">Application Settings:</p>
         <Alert severity="info">
           Changes will be applied after page reload.
         </Alert>
@@ -73,7 +75,7 @@ export default function Settings() {
           <RadioGroup
             aria-label="theme"
             name="theme"
-            value={localStorage.getItem("theme")}
+            value={theme}
             onChange={handleThemeChange}
           >
             <FormControlLabel
@@ -92,7 +94,7 @@ export default function Settings() {
           <InputLabel id="ui-lang-label">Interface language</InputLabel>
           <Select
             labelId="ui-lang-label"
-            value={localStorage.getItem("lang")}
+            value={lang}
             onChange={handleUILangChange}
           >
             {langs.map((lang) => (

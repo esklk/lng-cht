@@ -1,4 +1,6 @@
-﻿namespace LngChat.Business.Models
+﻿using System.Collections.Generic;
+
+namespace LngChat.Business.Models
 {
     public class UserAccountModel
     {
@@ -9,5 +11,9 @@
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
+
+        public IEnumerable<LanguageInfoModel> LanguagesToLearn { get; set; }
+
+        public IEnumerable<LanguageInfoModel> LanguagesToTeach { get; set; }
     }
 }

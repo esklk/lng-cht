@@ -14,7 +14,7 @@
   margin: 3px;
   border-radius: 3px;
 }
-.setting-group p {
+.setting-group-header {
   font-size: larger;
   margin: 0 0 15px 0;
 }
