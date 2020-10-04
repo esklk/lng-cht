@@ -5,7 +5,7 @@ import { Router, Switch } from "react-router-dom";
 import PrivateRoute from "../Components/PrivateRoute";
 import FindUser from "../FindUser/FindUser";
 import ChatList from "../ChatList/ChatList";
-import Profile from "../Profile/Profile";
+import Settings from "../Settings/Settings";
 import "./Body.css";
 
 export default function Body() {
@@ -16,7 +16,7 @@ export default function Body() {
           <div className="navbar">
             <NavbarItem name={"find"} path={"/find"} />
             <NavbarItem name={"chat"} path={"/chat"} />
-            <NavbarItem name={"profile"} path={"/profile"} />
+            <NavbarItem name={"settings"} path={"/settings"} />
           </div>
           <div className="content">
             <Switch>
@@ -32,8 +32,8 @@ export default function Body() {
               ></PrivateRoute>
               <PrivateRoute
                 exact
-                path="/profile"
-                component={Profile}
+                path="/settings"
+                component={Settings}
               ></PrivateRoute>
             </Switch>
           </div>
