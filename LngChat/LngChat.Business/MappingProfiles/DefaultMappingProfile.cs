@@ -9,8 +9,7 @@ namespace LngChat.Business.MappingProfiles
     {
         public DefaultMappingProfile()
         {
-            CreateMap<User, UserAccountModel>()
-                .ForMember(d => d.UserId, m => m.MapFrom(s => s.Id))
+            CreateMap<User, UserModel>()
                 .ForMember(d => d.LanguagesToLearn, m => m.MapFrom(s => s.Languages.Where(x => x.ToLearn)))
                 .ForMember(d => d.LanguagesToTeach, m => m.MapFrom(s => s.Languages.Where(x => x.ToTeach)));
             CreateMap<LanguageInfo, LanguageInfoModel>()

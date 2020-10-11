@@ -26,14 +26,14 @@ namespace LngChat.Business.Services
         /// <param name="firstName">User's first name.</param>
         /// <param name="lastName">User's last name.</param>
         /// <returns>The related user account.</returns>
-        public async Task<(UserAccountModel account, bool isNew)> GetUserAccountAsync(string email, string firstName, string lastName)
+        public async Task<(UserModel user, bool isNew)> GetUserAccountAsync(string email, string firstName, string lastName)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
                 throw new ArgumentException("The value must not be null, empty or whitespace string.", nameof(email));
             }
 
-            var storedAccount = await _mapper.ProjectTo<UserAccountModel>(_context.Users).SingleOrDefaultAsync(x => x.Email == email);
+            var storedAccount = await _mapper.ProjectTo<UserModel>(_context.Users).SingleOrDefaultAsync(x => x.Email == email);
 
             if (storedAccount != null)
             {
@@ -50,7 +50,7 @@ namespace LngChat.Business.Services
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
-            return (_mapper.Map<UserAccountModel>(newUser), true);
+            return (_mapper.Map<UserModel>(newUser), true);
         }
     }
 }

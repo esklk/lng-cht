@@ -9,13 +9,13 @@ namespace LngChat.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountsController : ControllerBase
     {
         private readonly IAccessTokenGenerator _accessTokenGenerator;
         private readonly ITokenValidator _tokenValidator;
         private readonly IUserAccountService _userAccountService;
 
-        public AccountController(IAccessTokenGenerator accessTokenGenerator, ITokenValidator tokenValidator, IUserAccountService userAccountService)
+        public AccountsController(IAccessTokenGenerator accessTokenGenerator, ITokenValidator tokenValidator, IUserAccountService userAccountService)
         {
             _accessTokenGenerator = accessTokenGenerator;
             _tokenValidator = tokenValidator;
@@ -31,13 +31,16 @@ namespace LngChat.WebAPI.Controllers
                 return Unauthorized(result.ErrorMessage);
             }
 
-            var (account, isNew) = await _userAccountService.GetUserAccountAsync(result.Email, result.FirstName, result.LastName);
+            var (user, isNew) = await _userAccountService.GetUserAccountAsync(result.Email, result.FirstName, result.LastName);
 
-            var accessToken = _accessTokenGenerator.Generate(new[] { new Claim(ClaimTypes.NameIdentifier, account.UserId.ToString()) });
+            var accessToken = _accessTokenGenerator.Generate(new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) });
 
-            Response.StatusCode = (int)(isNew ? HttpStatusCode.Created : HttpStatusCode.OK);
+            if (isNew)
+            {
+                Response.StatusCode = (int)HttpStatusCode.Created;
+            }
 
-            return new { accessToken, account };
+            return new { accessToken, user };
         }
     }
 }

@@ -16,7 +16,7 @@ export const accountService = {
 
 function authenticate(token) {
   return api
-    .httpGet("account", { token }, true)
+    .httpGet("accounts", { token }, true)
     .then((response) => {
       return response.json().then((account) => {
         account.isNew = response.status === 201;

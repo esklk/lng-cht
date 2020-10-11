@@ -5,6 +5,6 @@ namespace LngChat.Business.Services
 {
     public interface IUserAccountService
     {
-        Task<(UserAccountModel account, bool isNew)> GetUserAccountAsync(string email, string firstName, string lastName);
+        Task<(UserModel user, bool isNew)> GetUserAccountAsync(string email, string firstName, string lastName);
     }
 }
