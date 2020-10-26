@@ -1,35 +1,28 @@
-import React, { Component } from "react";
+import React from "react";
 import Header from "./Header/Header";
 import Login from "./Login/Login";
 import Body from "./Body/Body";
 import { accountService } from "./Services/accountService";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
+const theme = createMuiTheme({
+  palette: {
+    type: localStorage.getItem("theme"),
+    primary: {
+      main: '#ca3e47'
+    }
+  },
+});
 
-    this.state = {
-      currentUser: null,
-    };
-  }
+export default function App() {
+  const currentUser = accountService.currentUserValue.account;
 
-  componentDidMount() {
-    accountService.currentUser.subscribe((x) =>
-      this.setState({ currentUser: x })
-    );
-  }
-
-  render() {
-    const { currentUser } = this.state;
-    return (
+  return (
+    <ThemeProvider theme={theme}>
       <div className="main">
         <Header />
-        {currentUser ? (
-          <Body />
-        ) : (
-          <Login />
-        )}
+        {currentUser ? <Body /> : <Login />}
       </div>
-    );
-  }
+    </ThemeProvider>
+  );
 }
