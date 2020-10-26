@@ -1,0 +1,16 @@
+.checkbox {
+  width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rater {
+  max-width: 180px;
+}
+.rateable-checkbox-wrapper {
+  display: "flex";
+  align-items: "center";
+  border-bottom: solid rgba(250, 151, 151, 0.1) 1px;
+}
+.rateable-checkbox-wrapper:last-child {
+  border-bottom: none;
+}

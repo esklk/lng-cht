@@ -1,35 +1,8 @@
 import React from "react";
-import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import { Slider } from "@material-ui/core";
-
-const marks = [
-  {
-    value: 0,
-    label: "A1",
-  },
-  {
-    value: 1,
-    label: "A2",
-  },
-  {
-    value: 2,
-    label: "B1",
-  },
-  {
-    value: 3,
-    label: "B2",
-  },
-  {
-    value: 4,
-    label: "C1",
-  },
-  {
-    value: 5,
-    label: "C2",
-  },
-];
+import "./RateableCheckbox.css";
 
 function valuetext(value) {
   //return value;
@@ -40,26 +13,26 @@ export default function RateableCheckbox({
   text,
   checked,
   rate,
+  marks,
   onChange,
 }) {
   const [checkboxValue, setCheckboxValue] = React.useState(checked);
   const handleCheckStateChange = (event) => {
     setCheckboxValue(event.target.checked);
-    onChange(value, checkboxValue);
+    if (onChange) {
+      onChange(value, event.target.checked, 0);
+    }
   };
   const handleRateChange = (event, newValue) => {
-    onChange(value, checkboxValue, newValue);
+    if (onChange) {
+      onChange(value, checkboxValue, newValue);
+    }
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        paddingRight: "15px",
-      }}
-    >
+    <div className="rateable-checkbox-wrapper">
       <FormControlLabel
+        className="checkbox"
         label={text}
         control={
           <Checkbox
@@ -70,6 +43,7 @@ export default function RateableCheckbox({
         }
       />
       <Slider
+        className="rater"
         defaultValue={rate}
         getAriaValueText={valuetext}
         valueLabelDisplay="off"
@@ -77,8 +51,8 @@ export default function RateableCheckbox({
         disabled={!checkboxValue}
         step={1}
         marks={marks}
-        min={0}
-        max={5}
+        min={marks[0].value}
+        max={marks[marks.length - 1].value}
       />
     </div>
   );

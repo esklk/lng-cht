@@ -10,57 +10,146 @@ import {
   FormControlLabel,
   Button,
 } from "@material-ui/core";
-import React from "react";
-import { Autocomplete, Alert } from "@material-ui/lab";
+import React, { useState, useRef } from "react";
+import { Alert } from "@material-ui/lab";
 import "./Settings.css";
 import ISO6391 from "iso-639-1";
 import { accountService } from "../Services/accountService";
-import RateableCheckbox from "../Components/RateableCheckbox";
-import RateableLanguageInfoList from "../Components/RateableLanguageInfoList";
+import RateableCheckboxListInput from "../Components/RateableCheckboxListInput";
+
+const langs = ISO6391.getLanguages(ISO6391.getAllCodes());
+const languageLevelMarks = [
+  {
+    value: 0,
+    label: "A1",
+  },
+  {
+    value: 1,
+    label: "A2",
+  },
+  {
+    value: 2,
+    label: "B1",
+  },
+  {
+    value: 3,
+    label: "B2",
+  },
+  {
+    value: 4,
+    label: "C1",
+  },
+  {
+    value: 5,
+    label: "C2",
+  },
+];
+const getFullUserLanguageList = (userLangs) =>
+  langs.map((lang) => {
+    let result = { key: lang.code, value: lang.code, text: lang.nativeName };
+    let userLang = userLangs.filter((x) => x.code === lang.code)[0];
+    if (userLang) {
+      result.checked = true;
+      result.rate = userLang.level;
+    }
+    return result;
+  });
+
+const getCleanUserLanguageList = (userLangs) =>
+  userLangs
+    .filter((lang) => lang.checked)
+    .map((lang) => {
+      return { code: lang.value, level: lang.rate };
+    });
 
 export default function Settings() {
-  const [lang, setLang] = React.useState(localStorage.getItem("lang"));
+  const userRef = useRef(accountService.currentUserValue.account);
+  const [lang, setLang] = useState(localStorage.getItem("lang"));
   const handleUILangChange = (event) => {
     let value = event.target.value;
     setLang(value);
     localStorage.setItem("lang", event.target.value);
   };
 
-  const [theme, setTheme] = React.useState(localStorage.getItem("theme"));
+  const [theme, setTheme] = useState(localStorage.getItem("theme"));
   const handleThemeChange = (event) => {
     let value = event.target.value;
     setTheme(value);
     localStorage.setItem("theme", value);
   };
 
-  const langs = ISO6391.getLanguages(ISO6391.getAllCodes());
-  const user = accountService.currentUserValue.account;
+  const [firstName, setFirstName] = useState(userRef.current.firstName);
+  const handleUserFirstNameChange = (event) => {
+    let value = event.target.value;
+    setFirstName(value);
+  };
 
-  const getFullUserLanguageList = (userLangs) =>
-    langs.map((lang) => {
-      let userLang = userLangs.filter((x) => x.code === lang.code)[0];
-      if (userLang) {
-        lang.checked = true;
-        lang.rate = userLang.level;
-      }
-      return lang;
-    });
+  const [lastName, setLastName] = useState(userRef.current.lastName);
+  const handleUserLastNameChange = (event) => {
+    let value = event.target.value;
+    setLastName(value);
+  };
 
-  const langsToLearn = getFullUserLanguageList(user.languagesToLearn);
-  const langsToTeach = getFullUserLanguageList(user.languagesToTeach);
+  const [languagesToLearn, setLanguagesToLearn] = useState(
+    userRef.current.languagesToLearn
+  );
+  const handleLangsToLearnApply = (value) =>
+    setLanguagesToLearn(getCleanUserLanguageList(value));
+
+  const [languagesToTeach, setLanguagesToTeach] = useState(
+    userRef.current.languagesToTeach
+  );
+  const handleLangsToTeachApply = (value) =>
+    setLanguagesToTeach(getCleanUserLanguageList(value));
+
+  function handleProfileSettingsSaveClick() {
+    let userToSave = {
+      id: userRef.current.userId,
+      email: userRef.current.email,
+      firstName,
+      lastName,
+      languagesToLearn,
+      languagesToTeach,
+    };
+    //TODO: send user to server to save
+    console.log(userToSave);
+  }
 
   return (
     <div className="settings">
       <div className="setting-group">
         <p className="setting-group-header">Profile settings:</p>
-        <TextField required value={user.firstName} label="First Name" />
-        <TextField required value={user.lastName} label="Last Name" />
-        <br/>
-        {/* This components slows down page loading. Think about control to select languages. */}
-        <RateableLanguageInfoList languages={langsToTeach} label="Languages to Teach"/>
-        <RateableLanguageInfoList languages={langsToLearn} label="Languages to Learn" />
+        <TextField
+          required
+          value={firstName}
+          onChange={handleUserFirstNameChange}
+          label="First Name"
+        />
+        <TextField
+          required
+          value={lastName}
+          onChange={handleUserLastNameChange}
+          label="Last Name"
+        />
         <br />
-        <Button variant="contained" color="primary">
+        <RateableCheckboxListInput
+          items={getFullUserLanguageList(languagesToLearn)}
+          label="Languages to Learn"
+          marks={languageLevelMarks}
+          onApply={handleLangsToLearnApply}
+        />
+        <RateableCheckboxListInput
+          items={getFullUserLanguageList(languagesToTeach)}
+          label="Languages to Teach"
+          marks={languageLevelMarks}
+          onApply={handleLangsToTeachApply}
+        />
+        <br />
+        <Button
+          onClick={handleProfileSettingsSaveClick}
+          variant="contained"
+          color="primary"
+        >
           Save
         </Button>
       </div>

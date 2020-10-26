@@ -12,6 +12,9 @@ export const accountService = {
   get currentUserValue() {
     return currentUserSubject.value;
   },
+  set currentUserValue(newUserValue) {
+    setCurrentUserAccount(newUserValue);
+  },
 };
 
 function authenticate(token) {
@@ -25,10 +28,7 @@ function authenticate(token) {
     })
     .then((accountData) => {
       if (accountData) {
-        localStorage.setItem(
-          "currentUser",
-          JSON.stringify(accountData)
-        );
+        localStorage.setItem("currentUser", JSON.stringify(accountData));
         currentUserSubject.next(accountData);
         return accountData;
       }
@@ -43,4 +43,10 @@ function logout() {
   // remove user from local storage to log user out
   localStorage.removeItem("currentUser");
   currentUserSubject.next(null);
+}
+
+function setCurrentUserAccount(account) {
+  var currentUserData = currentUserSubject.value;
+  currentUserData.account = account;
+  localStorage.setItem("currentUser", JSON.stringify(currentUserData));
 }
