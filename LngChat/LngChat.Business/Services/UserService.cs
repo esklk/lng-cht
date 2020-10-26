@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using LngChat.Business.Models;
 using LngChat.Data;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace LngChat.Business.Services
@@ -17,22 +17,17 @@ namespace LngChat.Business.Services
             _mapper = mapper;
         }
 
-        public async Task<Guid> CreateUser(UserModel user)
+        public async Task<UserModel> UpdateUser(UserModel user)
         {
-            //TODO: check if user is not exist, add entry to _context.Users, save changes and return user's Id
-            throw new NotImplementedException();
-        }
+            var dbUser = await _context.Users.SingleOrDefaultAsync(x => x.Id == user.Id);
 
-        public async Task<UserModel> GetUser(string email)
-        {
-            //TODO: get user from _context by email and map it to UserModel via automapper
-            throw new NotImplementedException();
-        }
+            if (dbUser != null)
+            {
+                _mapper.Map(user, dbUser);
+                await _context.SaveChangesAsync();
+            }
 
-        public async Task DeleteUser(Guid userId)
-        {
-            //TODO: find user by id and delete it
-            throw new NotImplementedException();
+            return _mapper.Map<UserModel>(dbUser);
         }
     }
 }
