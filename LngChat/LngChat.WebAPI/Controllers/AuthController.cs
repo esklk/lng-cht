@@ -9,17 +9,17 @@ namespace LngChat.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountsController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IAccessTokenGenerator _accessTokenGenerator;
         private readonly ITokenValidator _tokenValidator;
-        private readonly IUserAccountService _userAccountService;
+        private readonly IUserService _userService;
 
-        public AccountsController(IAccessTokenGenerator accessTokenGenerator, ITokenValidator tokenValidator, IUserAccountService userAccountService)
+        public AuthController(IAccessTokenGenerator accessTokenGenerator, ITokenValidator tokenValidator, IUserService userService)
         {
             _accessTokenGenerator = accessTokenGenerator;
             _tokenValidator = tokenValidator;
-            _userAccountService = userAccountService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -31,7 +31,7 @@ namespace LngChat.WebAPI.Controllers
                 return Unauthorized(result.ErrorMessage);
             }
 
-            var (user, isNew) = await _userAccountService.GetUserAccountAsync(result.Email, result.FirstName, result.LastName);
+            var (user, isNew) = await _userService.GetUserAsync(result.Email, result.FirstName, result.LastName);
 
             var accessToken = _accessTokenGenerator.Generate(new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) });
 
@@ -40,7 +40,7 @@ namespace LngChat.WebAPI.Controllers
                 Response.StatusCode = (int)HttpStatusCode.Created;
             }
 
-            return new { accessToken, user };
+            return new { accessToken };
         }
     }
 }

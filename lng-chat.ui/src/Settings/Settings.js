@@ -10,12 +10,12 @@ import {
   FormControlLabel,
   Button,
 } from "@material-ui/core";
-import React, { useState, useRef } from "react";
-import { Alert } from "@material-ui/lab";
+import React, { useState, useRef, useEffect, Fragment } from "react";
+import { Alert, Skeleton } from "@material-ui/lab";
 import "./Settings.css";
 import ISO6391 from "iso-639-1";
-import { accountService } from "../Services/accountService";
 import RateableCheckboxListInput from "../Components/RateableCheckboxListInput";
+import { userService } from "../Services/userService";
 
 const langs = ISO6391.getLanguages(ISO6391.getAllCodes());
 const languageLevelMarks = [
@@ -63,7 +63,6 @@ const getCleanUserLanguageList = (userLangs) =>
     });
 
 export default function Settings() {
-  const userRef = useRef(accountService.currentUserValue.account);
   const [lang, setLang] = useState(localStorage.getItem("lang"));
   const handleUILangChange = (event) => {
     let value = event.target.value;
@@ -78,36 +77,35 @@ export default function Settings() {
     localStorage.setItem("theme", value);
   };
 
-  const [firstName, setFirstName] = useState(userRef.current.firstName);
-  const handleUserFirstNameChange = (event) => {
-    let value = event.target.value;
-    setFirstName(value);
-  };
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const fetchUser = async () => {
+      setIsLoading(true);
+      const result = await userService.getUserAsync();
+      setUser(result);
+      setIsLoading(false);
+    };
+    fetchUser();
+  }, []);
 
-  const [lastName, setLastName] = useState(userRef.current.lastName);
-  const handleUserLastNameChange = (event) => {
-    let value = event.target.value;
-    setLastName(value);
-  };
+  const firstNameRef = useRef();
+  const lastNameRef = useRef();
 
-  const [languagesToLearn, setLanguagesToLearn] = useState(
-    userRef.current.languagesToLearn
-  );
+  const [languagesToLearn, setLanguagesToLearn] = useState([]);
   const handleLangsToLearnApply = (value) =>
     setLanguagesToLearn(getCleanUserLanguageList(value));
 
-  const [languagesToTeach, setLanguagesToTeach] = useState(
-    userRef.current.languagesToTeach
-  );
+  const [languagesToTeach, setLanguagesToTeach] = useState([]);
   const handleLangsToTeachApply = (value) =>
     setLanguagesToTeach(getCleanUserLanguageList(value));
 
   function handleProfileSettingsSaveClick() {
     let userToSave = {
-      id: userRef.current.userId,
-      email: userRef.current.email,
-      firstName,
-      lastName,
+      id: user.userId,
+      email: user.email,
+      firstName: firstNameRef.current.value,
+      lastName: lastNameRef.current.value,
       languagesToLearn,
       languagesToTeach,
     };
@@ -119,39 +117,54 @@ export default function Settings() {
     <div className="settings">
       <div className="setting-group">
         <p className="setting-group-header">Profile settings:</p>
-        <TextField
-          required
-          value={firstName}
-          onChange={handleUserFirstNameChange}
-          label="First Name"
-        />
-        <TextField
-          required
-          value={lastName}
-          onChange={handleUserLastNameChange}
-          label="Last Name"
-        />
-        <br />
-        <RateableCheckboxListInput
-          items={getFullUserLanguageList(languagesToLearn)}
-          label="Languages to Learn"
-          marks={languageLevelMarks}
-          onApply={handleLangsToLearnApply}
-        />
-        <RateableCheckboxListInput
-          items={getFullUserLanguageList(languagesToTeach)}
-          label="Languages to Teach"
-          marks={languageLevelMarks}
-          onApply={handleLangsToTeachApply}
-        />
-        <br />
-        <Button
-          onClick={handleProfileSettingsSaveClick}
-          variant="contained"
-          color="primary"
-        >
-          Save
-        </Button>
+        {isLoading ? (
+          <Fragment>
+            <Skeleton variant="text" height="48px" />
+            <Skeleton variant="text" height="48px" />
+            <Skeleton variant="text" height="16px" />
+            <Skeleton variant="text" height="48px" />
+            <Skeleton variant="text" height="16px" />
+            <Skeleton variant="text" height="48px" />
+            <br />
+            <Skeleton variant="text" height="48px" />
+          </Fragment>
+        ) : (
+          <Fragment>
+            <TextField
+              required
+              defaultValue={user.firstName}
+              inputRef={firstNameRef}
+              label="First Name"
+            />
+            <TextField
+              required
+              defaultValue={user.lastName}
+              inputRef={lastNameRef}
+              label="Last Name"
+            />
+            <br />
+            <RateableCheckboxListInput
+              items={getFullUserLanguageList([])}
+              label="Languages to Learn"
+              marks={languageLevelMarks}
+              onApply={handleLangsToLearnApply}
+            />
+            <RateableCheckboxListInput
+              items={getFullUserLanguageList([])}
+              label="Languages to Teach"
+              marks={languageLevelMarks}
+              onApply={handleLangsToTeachApply}
+            />
+            <br />
+            <Button
+              onClick={handleProfileSettingsSaveClick}
+              variant="contained"
+              color="primary"
+            >
+              Save
+            </Button>
+          </Fragment>
+        )}
       </div>
       <div className="setting-group">
         <p className="setting-group-header">Application Settings:</p>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using LngChat.Business.Models;
 using LngChat.Business.Services;
@@ -21,17 +22,21 @@ namespace LngChat.WebAPI.Controllers
             _userService = userService;
         }
 
-        public async Task<object> Post(UserModel user)
+        //TODO: specify route /current
+        public async Task<UserModel> Get()
         {
-            var updatedUser = await _userService.UpdateUser(user);
-            
-            if(user == null)
-            {
-                Response.StatusCode = (int)HttpStatusCode.NotFound;
-            }
-
-            return updatedUser;
-
+            return await _userService.GetUserAsync(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)));
         }
+
+        //TODO: specify route /current
+        //public async Task Post(UserModel user)
+        //{
+        //    var updatedUser = await _userService.UpdateUserAsync(user);
+            
+        //    if(updatedUser == null)
+        //    {
+        //        Response.StatusCode = (int)HttpStatusCode.NotFound;
+        //    }
+        //}
     }
 }

@@ -3,26 +3,26 @@ import { accountService } from "./accountService";
 const apiRoot = "https://localhost:44361/api/";
 
 export const api = {
-  httpGet,
-  httpPut,
-  httpPost,
-  httpDelete,
+  getAsync,
+  putAsync,
+  postAsync,
+  deleteAsync,
 };
 
-function httpGet(path, parameters, anonymous) {
-  return execute("GET", createUrl(path, parameters), anonymous);
+function getAsync(path, parameters, anonymous) {
+  return executeAsync("GET", createUrl(path, parameters), anonymous);
 }
 
-function httpPut(path, parameters, anonymous) {
-  return execute("PUT", createUrl(path), anonymous, parameters);
+function putAsync(path, parameters, anonymous) {
+  return executeAsync("PUT", createUrl(path), anonymous, parameters);
 }
 
-function httpPost(path, parameters, anonymous) {
-  return execute("POST", createUrl(path), anonymous, parameters);
+function postAsync(path, parameters, anonymous) {
+  return executeAsync("POST", createUrl(path), anonymous, parameters);
 }
 
-function httpDelete(path, parameters, anonymous) {
-  return execute("DELETE", createUrl(path, parameters), anonymous);
+function deleteAsync(path, parameters, anonymous) {
+  return executeAsync("DELETE", createUrl(path, parameters), anonymous);
 }
 
 function createUrl(path, queryParams) {
@@ -35,10 +35,10 @@ function createUrl(path, queryParams) {
   return url.href;
 }
 
-function execute(method, url, anonymous, body) {
+function executeAsync(method, url, anonymous, body) {
   let headers = { "Content-Type": "application/json" };
   if (!anonymous) {
-    headers.Authorization = accountService.currentUser.accessToken;
+    headers.Authorization = "Bearer " + accountService.accessToken;
   }
   return fetch(url, { method, headers, body }).then((response) => {
     if (response.ok) {

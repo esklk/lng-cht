@@ -9,19 +9,32 @@ const theme = createMuiTheme({
   palette: {
     type: localStorage.getItem("theme"),
     primary: {
-      main: '#ca3e47'
-    }
+      main: "#ca3e47",
+    },
   },
 });
 
 export default function App() {
-  const currentUser = accountService.currentUserValue.account;
+  const [authData, setAuthData] = React.useState({
+    accessToken: accountService.accessToken,
+    isNew: false,
+  });
+
+  const onAuthenticated = (data) => {
+    if (data) {
+      setAuthData(data);
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <div className="main">
         <Header />
-        {currentUser ? <Body /> : <Login />}
+        {authData.accessToken ? (
+          <Body isNewUser={authData.isNew} />
+        ) : (
+          <Login onAuthenticated={onAuthenticated} />
+        )}
       </div>
     </ThemeProvider>
   );

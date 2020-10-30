@@ -64,7 +64,7 @@ namespace LngChat.WebAPI
                 .AddSingleton<IAccessTokenGenerator, JwtAccessTokenGenerator>()
                 .AddSingleton(oAuthCredentials["Google"])
                 .AddScoped<ITokenValidator, GoogleTokenValidator>()
-                .AddScoped<IUserAccountService, UserAccountService>();
+                .AddScoped<IUserService, UserService>();
 
             services.AddControllers();
         }

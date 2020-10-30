@@ -1,14 +1,18 @@
 import React from "react";
 import NavbarItem from "../NavbarItem/NavbarItem";
 import { createBrowserHistory } from "history";
-import { Router, Switch } from "react-router-dom";
+import { Router, Switch, useHistory } from "react-router-dom";
 import PrivateRoute from "../Components/PrivateRoute";
 import FindUser from "../FindUser/FindUser";
 import ChatList from "../ChatList/ChatList";
 import Settings from "../Settings/Settings";
 import "./Body.css";
 
-export default function Body() {
+export default function Body({isUserNew}) {
+
+const history = useHistory();
+//history.push(isUserNew? "/settings" : "/chat");
+
   return (
     <div className="body">
       <div className="wrapper">
@@ -18,6 +22,7 @@ export default function Body() {
             <NavbarItem name={"chat"} path={"/chat"} />
             <NavbarItem name={"settings"} path={"/settings"} />
           </div>
+          {/* TODO: navegate to setting when isNewUser === true, otherwise to chat list. */}
           <div className="content">
             <Switch>
               <PrivateRoute

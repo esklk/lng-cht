@@ -1,36 +1,38 @@
-import { BehaviorSubject } from "rxjs";
 import { api } from "./apiService";
-
-const currentUserSubject = new BehaviorSubject(
-  JSON.parse(localStorage.getItem("currentUser"))
-);
+var jwt = require("jsonwebtoken");
 
 export const accountService = {
   authenticate,
   logout,
-  currentUser: currentUserSubject.asObservable(),
-  get currentUserValue() {
-    return currentUserSubject.value;
-  },
-  set currentUserValue(newUserValue) {
-    setCurrentUserAccount(newUserValue);
+  get accessToken() {
+    var token = localStorage.getItem("accessToken");
+    if (!token) {
+      return null;
+    }
+    
+    var tokenExp = jwt.decode(token).exp;
+    if (Date.now() >= tokenExp * 1000) {
+      localStorage.removeItem("accessToken");
+      return null;
+    }
+
+    return token;
   },
 };
 
 function authenticate(token) {
   return api
-    .httpGet("accounts", { token }, true)
+    .getAsync("auth", { token }, true)
     .then((response) => {
-      return response.json().then((account) => {
-        account.isNew = response.status === 201;
-        return account;
+      return response.json().then((authData) => {
+        authData.isNew = response.status === 201;
+        return authData;
       });
     })
-    .then((accountData) => {
-      if (accountData) {
-        localStorage.setItem("currentUser", JSON.stringify(accountData));
-        currentUserSubject.next(accountData);
-        return accountData;
+    .then((authData) => {
+      if (authData) {
+        localStorage.setItem("accessToken", authData.accessToken);
+        return authData;
       }
     })
     .catch((error) => {
@@ -40,13 +42,6 @@ function authenticate(token) {
 }
 
 function logout() {
-  // remove user from local storage to log user out
-  localStorage.removeItem("currentUser");
-  currentUserSubject.next(null);
-}
-
-function setCurrentUserAccount(account) {
-  var currentUserData = currentUserSubject.value;
-  currentUserData.account = account;
-  localStorage.setItem("currentUser", JSON.stringify(currentUserData));
+  // remove the access token from local storage to log user out
+  localStorage.removeItem("accessToken");
 }

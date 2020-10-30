@@ -5,8 +5,8 @@ import {accountService} from "../Services/accountService";
 export default function PrivateRoute({ component: Component, ...rest }) {
     return (
         <Route {...rest} render={props => {
-            const currentUser = accountService.currentUserValue;
-            if (!currentUser) {
+            const currentToken = accountService.accessToken;
+            if (!currentToken) {
                 // not logged in so redirect to login page
                 window.location.href = window.location.origin;
             }

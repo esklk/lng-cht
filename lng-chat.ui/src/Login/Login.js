@@ -3,14 +3,19 @@ import GoogleLogin from "react-google-login";
 import { accountService } from "../Services/accountService";
 import "./Login.css";
 
-const responseGoogle = (response) => {
-  if (response && response.tokenId) {
-    accountService
-      .authenticate(response.tokenId);
-  }
-};
+export default function Login({onAuthenticated}) {
 
-export default function Login() {
+  const responseGoogle = (response) => {
+    if (response && response.tokenId) {
+      accountService
+        .authenticate(response.tokenId).then(authData => {
+          if(authData && onAuthenticated){
+            onAuthenticated(authData);
+          }
+        });
+    }
+  };
+
   return (
     <div className="login">
       <div className="container">
