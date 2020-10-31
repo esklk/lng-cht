@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using LngChat.Business.Models;
 using LngChat.Business.Services;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LngChat.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -22,21 +20,25 @@ namespace LngChat.WebAPI.Controllers
             _userService = userService;
         }
 
-        //TODO: specify route /current
+        [HttpGet]
+        [Route("current")]
         public async Task<UserModel> Get()
         {
             return await _userService.GetUserAsync(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)));
         }
 
-        //TODO: specify route /current
-        //public async Task Post(UserModel user)
-        //{
-        //    var updatedUser = await _userService.UpdateUserAsync(user);
-            
-        //    if(updatedUser == null)
-        //    {
-        //        Response.StatusCode = (int)HttpStatusCode.NotFound;
-        //    }
-        //}
+        [HttpPatch]
+        [Route("current")]
+        public async Task Patch(UserModel user)
+        {
+            user.Id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var updatedUser = await _userService.UpdateUserAsync(user);
+
+            if (updatedUser == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.NotFound;
+            }
+        }
     }
 }

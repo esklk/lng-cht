@@ -78,7 +78,7 @@ export default function Settings() {
   };
 
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState();
   useEffect(() => {
     const fetchUser = async () => {
       setIsLoading(true);
@@ -88,6 +88,13 @@ export default function Settings() {
     };
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setLanguagesToLearn(user.languagesToLearn);
+      setLanguagesToTeach(user.languagesToTeach);
+    }
+  }, [user]);
 
   const firstNameRef = useRef();
   const lastNameRef = useRef();
@@ -109,8 +116,9 @@ export default function Settings() {
       languagesToLearn,
       languagesToTeach,
     };
-    //TODO: send user to server to save
     console.log(userToSave);
+    setIsLoading(true);
+    userService.updateUserAsync(userToSave).then((x) => setIsLoading(false));
   }
 
   return (
@@ -144,13 +152,13 @@ export default function Settings() {
             />
             <br />
             <RateableCheckboxListInput
-              items={getFullUserLanguageList([])}
+              items={getFullUserLanguageList(languagesToLearn)}
               label="Languages to Learn"
               marks={languageLevelMarks}
               onApply={handleLangsToLearnApply}
             />
             <RateableCheckboxListInput
-              items={getFullUserLanguageList([])}
+              items={getFullUserLanguageList(languagesToTeach)}
               label="Languages to Teach"
               marks={languageLevelMarks}
               onApply={handleLangsToTeachApply}

@@ -6,9 +6,9 @@ export const userService = {
 };
 
 function getUserAsync(){
-    return api.getAsync("users").then(response => response.json());
+    return api.getAsync("users/current").then(response => response.json());
 }
 
 function updateUserAsync(userData){
-    return null;
+    return api.patchAsync("users/current", userData);
 }

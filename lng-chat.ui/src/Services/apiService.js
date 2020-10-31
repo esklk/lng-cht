@@ -4,7 +4,7 @@ const apiRoot = "https://localhost:44361/api/";
 
 export const api = {
   getAsync,
-  putAsync,
+  patchAsync,
   postAsync,
   deleteAsync,
 };
@@ -13,8 +13,8 @@ function getAsync(path, parameters, anonymous) {
   return executeAsync("GET", createUrl(path, parameters), anonymous);
 }
 
-function putAsync(path, parameters, anonymous) {
-  return executeAsync("PUT", createUrl(path), anonymous, parameters);
+function patchAsync(path, parameters, anonymous) {
+  return executeAsync("PATCH", createUrl(path), anonymous, parameters);
 }
 
 function postAsync(path, parameters, anonymous) {
@@ -36,11 +36,17 @@ function createUrl(path, queryParams) {
 }
 
 function executeAsync(method, url, anonymous, body) {
+  let accessToken = accountService.accessToken;
+  if (!accessToken && !anonymous) {
+    window.location.href = window.location.origin;
+    return;
+  }
+
   let headers = { "Content-Type": "application/json" };
   if (!anonymous) {
     headers.Authorization = "Bearer " + accountService.accessToken;
   }
-  return fetch(url, { method, headers, body }).then((response) => {
+  return fetch(url, { method, headers, body: JSON.stringify(body) }).then((response) => {
     if (response.ok) {
       return response;
     }
@@ -48,6 +54,7 @@ function executeAsync(method, url, anonymous, body) {
     if (!anonymous && (response.status === 401 || response.status === 403)) {
       accountService.logout();
       window.location.href = window.location.origin;
+      return;
     }
     console.error(
       `Server responded to "${response.url}" with status code ${response.status}.`

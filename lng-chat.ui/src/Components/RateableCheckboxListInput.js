@@ -71,7 +71,7 @@ export default function RateableCheckboxListInput({
       >
         <DialogTitle id="scroll-dialog-title">{label}</DialogTitle>
         <DialogContent dividers={true}>
-          <DialogContentText
+          <DialogContent
             id="scroll-dialog-description"
             ref={descriptionElementRef}
             tabIndex={-1}
@@ -81,7 +81,7 @@ export default function RateableCheckboxListInput({
               marks={marks}
               onChange={handleRateableCheckboxListChanged}
             />
-          </DialogContentText>
+          </DialogContent>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelClick}>Cancel</Button>
