@@ -15,9 +15,11 @@ namespace LngChat.Business.MappingProfiles
                 .ForMember(d => d.LanguagesToLearn, m => m.MapFrom(s => s.Languages.Where(x => x.ToLearn)))
                 .ForMember(d => d.LanguagesToTeach, m => m.MapFrom(s => s.Languages.Where(x => x.ToTeach)));
             CreateMap<UserModel, User>()
+                .ForMember(d => d.Id, m => m.Ignore())
+                .ForMember(d => d.Email, m => m.Ignore())
                 .ForMember(d => d.Languages, m => m.MapFrom(s => new List<LanguageInfo>()
                     .Concat(s.LanguagesToLearn
-                        .Select(x =>new LanguageInfo
+                        .Select(x => new LanguageInfo
                         {
                             Code = x.Code,
                             Level = (LanguageLevel)x.Level,

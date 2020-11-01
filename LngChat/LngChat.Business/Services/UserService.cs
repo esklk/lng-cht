@@ -54,8 +54,12 @@ namespace LngChat.Business.Services
 
         public async Task<UserModel> UpdateUserAsync(UserModel user)
         {
-            var dbUser = await _context.Users.SingleOrDefaultAsync(x => x.Id == user.Id);
+            if(user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
 
+            var dbUser = await _context.Users.Include(x => x.Languages).SingleOrDefaultAsync(x => x.Id == user.Id);
             if (dbUser != null)
             {
                 _mapper.Map(user, dbUser);

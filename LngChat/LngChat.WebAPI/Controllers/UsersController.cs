@@ -29,7 +29,7 @@ namespace LngChat.WebAPI.Controllers
 
         [HttpPatch]
         [Route("current")]
-        public async Task Patch(UserModel user)
+        public async Task<UserModel> Patch(UserModel user)
         {
             user.Id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
@@ -39,6 +39,8 @@ namespace LngChat.WebAPI.Controllers
             {
                 Response.StatusCode = (int)HttpStatusCode.NotFound;
             }
+
+            return updatedUser;
         }
     }
 }
