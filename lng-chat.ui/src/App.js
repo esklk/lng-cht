@@ -4,6 +4,8 @@ import Login from "./Login/Login";
 import Body from "./Body/Body";
 import { accountService } from "./Services/accountService";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import i18nContext from "./Components/i18nContext";
+import { i18n } from "./Services/i18nService";
 
 const theme = createMuiTheme({
   palette: {
@@ -13,6 +15,8 @@ const theme = createMuiTheme({
     },
   },
 });
+
+const resources = new i18n(localStorage.getItem("lang"));
 
 export default function App() {
   const [authData, setAuthData] = React.useState({
@@ -27,15 +31,17 @@ export default function App() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className="main">
-        <Header />
-        {authData.accessToken ? (
-          <Body isNewUser={authData.isNew} />
-        ) : (
-          <Login onAuthenticated={onAuthenticated} />
-        )}
-      </div>
-    </ThemeProvider>
+    <i18nContext.Provider value={resources}>
+      <ThemeProvider theme={theme}>
+        <div className="main">
+          <Header />
+          {authData.accessToken ? (
+            <Body isNewUser={authData.isNew} />
+          ) : (
+            <Login onAuthenticated={onAuthenticated} />
+          )}
+        </div>
+      </ThemeProvider>
+    </i18nContext.Provider>
   );
 }

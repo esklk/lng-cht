@@ -16,6 +16,8 @@ import "./Settings.css";
 import ISO6391 from "iso-639-1";
 import RateableCheckboxListInput from "../Components/RateableCheckboxListInput";
 import { userService } from "../Services/userService";
+import { useI18n } from "../Components/i18nContext";
+import { i18nService } from "../Services/i18nService";
 
 const langs = ISO6391.getLanguages(ISO6391.getAllCodes());
 const languageLevelMarks = [
@@ -109,22 +111,21 @@ export default function Settings() {
 
   function handleProfileSettingsSaveClick() {
     let userToSave = {
-      id: user.userId,
-      email: user.email,
       firstName: firstNameRef.current.value,
       lastName: lastNameRef.current.value,
       languagesToLearn,
       languagesToTeach,
     };
-    console.log(userToSave);
     setIsLoading(true);
     userService.updateUserAsync(userToSave).then((x) => setIsLoading(false));
   }
 
+  const i18n = useI18n();
+
   return (
     <div className="settings">
       <div className="setting-group">
-        <p className="setting-group-header">Profile settings:</p>
+        <p className="setting-group-header">{i18n.profileSettings}:</p>
         {isLoading ? (
           <Fragment>
             <Skeleton variant="text" height="48px" />
@@ -142,24 +143,24 @@ export default function Settings() {
               required
               defaultValue={user.firstName}
               inputRef={firstNameRef}
-              label="First Name"
+              label={i18n.firstName}
             />
             <TextField
               required
               defaultValue={user.lastName}
               inputRef={lastNameRef}
-              label="Last Name"
+              label={i18n.lastName}
             />
             <br />
             <RateableCheckboxListInput
               items={getFullUserLanguageList(languagesToLearn)}
-              label="Languages to Learn"
+              label={i18n.languagesToLearn}
               marks={languageLevelMarks}
               onApply={handleLangsToLearnApply}
             />
             <RateableCheckboxListInput
               items={getFullUserLanguageList(languagesToTeach)}
-              label="Languages to Teach"
+              label={i18n.languagesToTeach}
               marks={languageLevelMarks}
               onApply={handleLangsToTeachApply}
             />
@@ -169,19 +170,19 @@ export default function Settings() {
               variant="contained"
               color="primary"
             >
-              Save
+              {i18n.save}
             </Button>
           </Fragment>
         )}
       </div>
       <div className="setting-group">
-        <p className="setting-group-header">Application Settings:</p>
+        <p className="setting-group-header">{i18n.applicationSettings}:</p>
         <Alert severity="info">
-          Changes will be applied after page reload.
+          {i18n.changesWillBeAppliedAfterPageReload}
         </Alert>
         <br />
         <FormControl component="fieldset">
-          <FormLabel component="legend">Color Scheme</FormLabel>
+          <FormLabel component="legend">{i18n.colorScheme}</FormLabel>
           <RadioGroup
             aria-label="theme"
             name="theme"
@@ -191,27 +192,31 @@ export default function Settings() {
             <FormControlLabel
               value="light"
               control={<Radio color="primary" />}
-              label="Light"
+              label={i18n.light}
             />
             <FormControlLabel
               value="dark"
               control={<Radio color="primary" />}
-              label="Dark"
+              label={i18n.dark}
             />
           </RadioGroup>
         </FormControl>
         <FormControl>
-          <InputLabel id="ui-lang-label">Interface language</InputLabel>
+          <InputLabel id="ui-lang-label">{i18n.interfaceLanguage}</InputLabel>
           <Select
             labelId="ui-lang-label"
             value={lang}
             onChange={handleUILangChange}
           >
-            {langs.map((lang) => (
-              <MenuItem key={lang.code} value={lang.code}>
-                {lang.nativeName}
-              </MenuItem>
-            ))}
+            {langs
+              .filter((lang) =>
+                i18nService.availableLocales.includes(lang.code)
+              )
+              .map((lang) => (
+                <MenuItem key={lang.code} value={lang.code}>
+                  {lang.nativeName}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
       </div>

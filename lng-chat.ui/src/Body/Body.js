@@ -1,28 +1,29 @@
 import React from "react";
 import NavbarItem from "../NavbarItem/NavbarItem";
 import { createBrowserHistory } from "history";
-import { Router, Switch, useHistory } from "react-router-dom";
+import { Router, Switch } from "react-router-dom";
 import PrivateRoute from "../Components/PrivateRoute";
 import FindUser from "../FindUser/FindUser";
 import ChatList from "../ChatList/ChatList";
 import Settings from "../Settings/Settings";
+import { useI18n } from "../Components/i18nContext";
 import "./Body.css";
 
-export default function Body({isUserNew}) {
+export default function Body({ isUserNew }) {
+  const history = createBrowserHistory();
+  history.push(isUserNew ? "/settings" : "/chat");
 
-const history = useHistory();
-//history.push(isUserNew? "/settings" : "/chat");
+  const i18n = useI18n();
 
   return (
     <div className="body">
       <div className="wrapper">
-        <Router history={createBrowserHistory()}>
+        <Router history={history}>
           <div className="navbar">
-            <NavbarItem name={"find"} path={"/find"} />
-            <NavbarItem name={"chat"} path={"/chat"} />
-            <NavbarItem name={"settings"} path={"/settings"} />
+            <NavbarItem name={i18n.find} path="/find" />
+            <NavbarItem name={i18n.chat} path="/chat" />
+            <NavbarItem name={i18n.settings} path="/settings" />
           </div>
-          {/* TODO: navegate to setting when isNewUser === true, otherwise to chat list. */}
           <div className="content">
             <Switch>
               <PrivateRoute
