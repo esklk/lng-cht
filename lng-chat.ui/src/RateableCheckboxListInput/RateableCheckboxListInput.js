@@ -4,14 +4,16 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import RateableCheckboxList from "./RateableCheckboxList";
+import RateableCheckboxList from "../Components/RateableCheckboxList";
 import { FormLabel } from "@material-ui/core";
+import "./RateableCheckboxListInput.css";
 
 export default function RateableCheckboxListInput({
   items,
   label,
   marks,
   onApply,
+  className,
 }) {
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -45,21 +47,20 @@ export default function RateableCheckboxListInput({
   ) : null;
 
   return (
-    <div>
+    <div className={className}>
       {labelElement}
-      <Button
-        onClick={handleClickOpen}
-        style={{ width: "100%", overflow: "hidden" }}
-      >
-        {items
-          .filter((item) => item.checked)
-          .map(
-            (item) =>
-              `${item.text} - ${
-                marks.find((mark) => mark.value === item.rate).label
-              }`
-          )
-          .join("; ") || "No language selected"}
+      <Button className="rcli-button" onClick={handleClickOpen}>
+        <span className="rcli-button-text">
+          {items
+            .filter((item) => item.checked)
+            .map(
+              (item) =>
+                `${item.text} - ${
+                  marks.find((mark) => mark.value === item.rate).label
+                }`
+            )
+            .join("; ") || "No language selected"}
+        </span>
       </Button>
       <Dialog
         open={open}

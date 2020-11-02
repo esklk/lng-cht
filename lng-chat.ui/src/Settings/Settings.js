@@ -1,3 +1,4 @@
+import "./Settings.css";
 import {
   TextField,
   Select,
@@ -12,9 +13,8 @@ import {
 } from "@material-ui/core";
 import React, { useState, useRef, useEffect, Fragment } from "react";
 import { Alert, Skeleton } from "@material-ui/lab";
-import "./Settings.css";
 import ISO6391 from "iso-639-1";
-import RateableCheckboxListInput from "../Components/RateableCheckboxListInput";
+import RateableCheckboxListInput from "../RateableCheckboxListInput/RateableCheckboxListInput";
 import { userService } from "../Services/userService";
 import { useI18n } from "../Components/i18nContext";
 import { i18nService } from "../Services/i18nService";
@@ -65,6 +65,8 @@ const getCleanUserLanguageList = (userLangs) =>
     });
 
 export default function Settings() {
+  const [errorMessage, setErrorMessage] = useState();
+
   const [lang, setLang] = useState(localStorage.getItem("lang"));
   const handleUILangChange = (event) => {
     let value = event.target.value;
@@ -116,8 +118,20 @@ export default function Settings() {
       languagesToLearn,
       languagesToTeach,
     };
+    if (!userToSave.firstName) {
+      setErrorMessage(`${i18n.firstName} ${i18n.isRequired}`);
+      return;
+    }
+    if (!userToSave.lastName) {
+      setErrorMessage(`${i18n.lastName} ${i18n.isRequired}`);
+      return;
+    }
     setIsLoading(true);
-    userService.updateUserAsync(userToSave).then((x) => setIsLoading(false));
+    userService
+      .updateUserAsync(userToSave)
+      .then((user) => setUser(user))
+      .catch(() => setErrorMessage(i18n.failedToSaveData))
+      .then(() => setIsLoading(false));
   }
 
   const i18n = useI18n();
@@ -127,38 +141,43 @@ export default function Settings() {
       <div className="setting-group">
         <p className="setting-group-header">{i18n.profileSettings}:</p>
         {isLoading ? (
-          <Fragment>
+          <>
             <Skeleton variant="text" height="48px" />
             <Skeleton variant="text" height="48px" />
             <Skeleton variant="text" height="16px" />
             <Skeleton variant="text" height="48px" />
             <Skeleton variant="text" height="16px" />
             <Skeleton variant="text" height="48px" />
-            <br />
             <Skeleton variant="text" height="48px" />
-          </Fragment>
+          </>
         ) : (
-          <Fragment>
+          <>
+            {errorMessage ? (
+              <Alert severity="error">{errorMessage}</Alert>
+            ) : null}
             <TextField
               required
+              className="row-input"
               defaultValue={user.firstName}
               inputRef={firstNameRef}
               label={i18n.firstName}
             />
             <TextField
               required
+              className="row-input"
               defaultValue={user.lastName}
               inputRef={lastNameRef}
               label={i18n.lastName}
             />
-            <br />
             <RateableCheckboxListInput
+              className="row-input"
               items={getFullUserLanguageList(languagesToLearn)}
               label={i18n.languagesToLearn}
               marks={languageLevelMarks}
               onApply={handleLangsToLearnApply}
             />
             <RateableCheckboxListInput
+              className="row-input"
               items={getFullUserLanguageList(languagesToTeach)}
               label={i18n.languagesToTeach}
               marks={languageLevelMarks}
@@ -172,7 +191,7 @@ export default function Settings() {
             >
               {i18n.save}
             </Button>
-          </Fragment>
+          </>
         )}
       </div>
       <div className="setting-group">

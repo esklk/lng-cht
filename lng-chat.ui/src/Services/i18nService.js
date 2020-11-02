@@ -55,6 +55,18 @@ export class i18n {
   get interfaceLanguage() {
     return resources[this.#locale].interfaceLanguage;
   }
+  get signIn() {
+    return resources[this.#locale].signIn;
+  }
+  get failedToSignIn() {
+    return resources[this.#locale].failedToSignIn;
+  }
+  get isRequired() {
+    return resources[this.#locale].isRequired;
+  }
+  get failedToSaveData() {
+    return resources[this.#locale].failedToSaveData;
+  }
 }
 
 const resources = {
@@ -75,5 +87,9 @@ const resources = {
     dark: "Dark",
     light: "Light",
     interfaceLanguage: "Interface Language",
+    signIn: "Sign In",
+    failedToSignIn: "Failed to Sign In",
+    isRequired: "is required",
+    failedToSaveData: "Failed to save data",
   },
 };
