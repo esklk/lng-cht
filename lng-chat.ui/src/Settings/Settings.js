@@ -18,6 +18,8 @@ import RateableCheckboxListInput from "../RateableCheckboxListInput/RateableChec
 import { userService } from "../Services/userService";
 import { useI18n } from "../Components/i18nContext";
 import { i18nService } from "../Services/i18nService";
+import { ExitToApp } from "@material-ui/icons";
+import { accountService } from "../Services/accountService";
 
 const langs = ISO6391.getLanguages(ISO6391.getAllCodes());
 const languageLevelMarks = [
@@ -134,6 +136,11 @@ export default function Settings() {
       .then(() => setIsLoading(false));
   }
 
+  function handleLogOutClick() {
+    accountService.logout();
+    window.location.reload();
+  }
+
   const i18n = useI18n();
 
   return (
@@ -237,6 +244,15 @@ export default function Settings() {
                 </MenuItem>
               ))}
           </Select>
+          <br />
+          <Button
+            onClick={handleLogOutClick}
+            size="small"
+            variant="outlined"
+            endIcon={<ExitToApp />}
+          >
+            {i18n.singOut}
+          </Button>
         </FormControl>
       </div>
     </div>

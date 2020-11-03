@@ -67,6 +67,9 @@ export class i18n {
   get failedToSaveData() {
     return resources[this.#locale].failedToSaveData;
   }
+  get singOut() {
+    return resources[this.#locale].singOut;
+  }
 }
 
 const resources = {
@@ -91,5 +94,6 @@ const resources = {
     failedToSignIn: "Failed to Sign In",
     isRequired: "is required",
     failedToSaveData: "Failed to save data",
+    singOut: "Sign Out",
   },
 };
