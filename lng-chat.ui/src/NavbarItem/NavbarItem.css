@@ -1,5 +1,15 @@
-.navbar_item {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+.navbar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex: 1 0 100px;
+  width: 100%;
+}
+.navbar-item a,
+.navbar-item-button {
+  width: 100%;
+  height: 100%;
+}
+.navbar-item-link-active .navbar-item-button {
+  color: var(--accent-color);
 }

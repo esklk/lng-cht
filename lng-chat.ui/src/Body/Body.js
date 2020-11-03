@@ -11,7 +11,9 @@ import "./Body.css";
 
 export default function Body({ isUserNew }) {
   const history = createBrowserHistory();
-  history.push(isUserNew ? "/settings" : "/chat");
+  if (window.location.pathname === "/") {
+    history.push(isUserNew ? "/settings" : "/chat");
+  }
 
   const i18n = useI18n();
 
@@ -20,9 +22,24 @@ export default function Body({ isUserNew }) {
       <div className="wrapper">
         <Router history={history}>
           <div className="navbar">
-            <NavbarItem name={i18n.find} path="/find" />
-            <NavbarItem name={i18n.chat} path="/chat" />
-            <NavbarItem name={i18n.settings} path="/settings" />
+            <NavbarItem
+              id="nav-find"
+              name={i18n.find}
+              iconName="search"
+              path="/find"
+            />
+            <NavbarItem
+              id="nav-chat"
+              name={i18n.chat}
+              iconName="chat"
+              path="/chat"
+            />
+            <NavbarItem
+              id="nav-settings"
+              name={i18n.settings}
+              iconName="tune"
+              path="/settings"
+            />
           </div>
           <div className="content">
             <Switch>
