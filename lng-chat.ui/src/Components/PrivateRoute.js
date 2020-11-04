@@ -9,6 +9,7 @@ export default function PrivateRoute({ component: Component, ...rest }) {
             if (!currentToken) {
                 // not logged in so redirect to login page
                 window.location.href = window.location.origin;
+                return null;
             }
     
             // authorized so return component
