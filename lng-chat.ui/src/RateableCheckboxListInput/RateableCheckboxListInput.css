@@ -5,6 +5,7 @@
   border-radius: 0 !important;
   border-bottom: solid 1px !important;
   min-height: 38px !important;
+  opacity: 0.7;
 }
 .rcli-button:hover {
   border-bottom-width: 2px !important;
