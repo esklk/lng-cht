@@ -4,3 +4,7 @@
   justify-content: center;
   height: 42px;
 }
+.logo {
+  font-family: "Pacifico", cursive;
+  font-size: 21px;
+}
