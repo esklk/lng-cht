@@ -78,7 +78,7 @@ const resources = {
     chat: "Chat",
     settings: "Settings",
     profileSettings: "Profile Settings",
-    applicationSettings: "ApplicationSettings",
+    applicationSettings: "Application Settings",
     firstName: "First Name",
     lastName: "Last Name",
     languagesToLearn: "Languages to Learn",
