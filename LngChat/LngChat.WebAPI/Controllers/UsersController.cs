@@ -3,8 +3,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using LngChat.Business.Models;
 using LngChat.Business.Services;
+using LngChat.WebAPI.ModelBinders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace LngChat.WebAPI.Controllers
 {
@@ -22,14 +24,22 @@ namespace LngChat.WebAPI.Controllers
 
         [HttpGet]
         [Route("current")]
-        public async Task<UserModel> Get()
+        public async Task<UserModel> GetCurrent()
         {
             return await _userService.GetUserAsync(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)));
         }
 
+        [HttpGet]
+        public async Task<UserModel[]> GetListAsync([ModelBinder(typeof(JsonArrayModelBinder))] UserFilterModel userFilterModel)
+        {
+            var result = await _userService.GetUsersAsync(userFilterModel, int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+
+            return result;
+        }
+
         [HttpPatch]
         [Route("current")]
-        public async Task<UserModel> Patch(UserModel user)
+        public async Task<UserModel> PatchCurrentAsync(UserModel user)
         {
             user.Id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
