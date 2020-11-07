@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace LngChat.Business.MappingProfiles
 {
-    public class DefaultMappingProfile : Profile
+    public class BusinessMappingProfile : Profile
     {
-        public DefaultMappingProfile()
+        public BusinessMappingProfile()
         {
             CreateMap<User, UserModel>()
                 .ForMember(d => d.LanguagesToLearn, m => m.MapFrom(s => s.Languages.Where(x => x.ToLearn)))

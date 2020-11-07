@@ -12,10 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Runtime.InteropServices.ComTypes;
 
 namespace LngChat.WebAPI
 {
@@ -59,7 +56,7 @@ namespace LngChat.WebAPI
                     .AllowAnyMethod()
                     .AllowAnyHeader()))
                 .AddDbContext<LngChatDbContext>(x => x.UseMySql(langChatDbConnectionString))
-                .AddAutoMapper(typeof(DefaultMappingProfile))
+                .AddAutoMapper(typeof(BusinessMappingProfile))
                 .AddSingleton<IJwtOptions>(jwtOptions)
                 .AddSingleton<IAccessTokenGenerator, JwtAccessTokenGenerator>()
                 .AddSingleton(oAuthCredentials["Google"])
