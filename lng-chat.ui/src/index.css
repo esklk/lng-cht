@@ -8,9 +8,10 @@ body {
   background-color: var(--bg-color-medium);
   color: var(--fg-color);
 }
-a{
+a {
   color: var(--fg-color);
   text-decoration: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",

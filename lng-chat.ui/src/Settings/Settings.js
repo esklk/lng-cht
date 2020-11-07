@@ -11,14 +11,14 @@ import {
   FormControlLabel,
   Button,
 } from "@material-ui/core";
-import React, { useState, useRef, useEffect, Fragment } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Alert, Skeleton } from "@material-ui/lab";
 import ISO6391 from "iso-639-1";
 import RateableCheckboxListInput from "../RateableCheckboxListInput/RateableCheckboxListInput";
 import { userService } from "../Services/userService";
 import { useI18n } from "../Components/i18nContext";
 import { i18nService } from "../Services/i18nService";
-import { ExitToApp } from "@material-ui/icons";
+import { Brightness7, ExitToApp, NightsStay } from "@material-ui/icons";
 import { accountService } from "../Services/accountService";
 
 const langs = ISO6391.getLanguages(ISO6391.getAllCodes());
@@ -218,12 +218,22 @@ export default function Settings() {
             <FormControlLabel
               value="light"
               control={<Radio color="primary" />}
-              label={i18n.light}
+              label={
+                <span className="theme-label">
+                  <Brightness7></Brightness7>
+                  {i18n.light}
+                </span>
+              }
             />
             <FormControlLabel
               value="dark"
               control={<Radio color="primary" />}
-              label={i18n.dark}
+              label={
+                <span className="theme-label">
+                  <NightsStay></NightsStay>
+                  {i18n.dark}
+                </span>
+              }
             />
           </RadioGroup>
         </FormControl>
