@@ -2,8 +2,8 @@ import { Backdrop, CircularProgress } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import React from "react";
 import GoogleLogin from "react-google-login";
-import { useI18n } from "../Components/i18nContext";
-import { accountService } from "../Services/accountService";
+import { useI18n } from "../Shared/i18nContext";
+import { accountService } from "../Shared/Services/accountService";
 import "./Login.css";
 
 export default function Login({ onAuthenticated }) {

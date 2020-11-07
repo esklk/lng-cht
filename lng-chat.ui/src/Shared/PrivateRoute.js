@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route } from 'react-router-dom';
-import {accountService} from "../Services/accountService";
+import {accountService} from "./Services/accountService";
 
 export default function PrivateRoute({ component: Component, ...rest }) {
     return (

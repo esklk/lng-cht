@@ -14,12 +14,12 @@ import {
 import React, { useState, useRef, useEffect } from "react";
 import { Alert, Skeleton } from "@material-ui/lab";
 import ISO6391 from "iso-639-1";
-import RateableCheckboxListInput from "../RateableCheckboxListInput/RateableCheckboxListInput";
-import { userService } from "../Services/userService";
-import { useI18n } from "../Components/i18nContext";
-import { i18nService } from "../Services/i18nService";
+import RateableCheckboxListInput from "./RateableCheckboxListInput/RateableCheckboxListInput";
+import { userService } from "../../Shared/Services/userService";
+import { useI18n } from "../../Shared/i18nContext";
+import { i18nService } from "../../Shared/Services/i18nService";
 import { Brightness7, ExitToApp, NightsStay } from "@material-ui/icons";
-import { accountService } from "../Services/accountService";
+import { accountService } from "../../Shared/Services/accountService";
 
 const langs = ISO6391.getLanguages(ISO6391.getAllCodes());
 const languageLevelMarks = [

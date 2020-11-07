@@ -2,10 +2,10 @@ import React from "react";
 import Header from "./Header/Header";
 import Login from "./Login/Login";
 import Body from "./Body/Body";
-import { accountService } from "./Services/accountService";
+import { accountService } from "./Shared/Services/accountService";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core";
-import i18nContext from "./Components/i18nContext";
-import { i18n } from "./Services/i18nService";
+import i18nContext from "./Shared/i18nContext";
+import { i18n } from "./Shared/Services/i18nService";
 
 const theme = createMuiTheme({
   palette: {

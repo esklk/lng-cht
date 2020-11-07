@@ -1,6 +1,6 @@
 import React from 'react'
 // eslint-disable-next-line
-import { i18n } from '../Services/i18nService'
+import { i18n } from './Services/i18nService'
 
 const i18nContext = React.createContext()
 /**

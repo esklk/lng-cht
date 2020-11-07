@@ -1,12 +1,12 @@
 import React from "react";
-import NavbarItem from "../NavbarItem/NavbarItem";
+import NavbarItem from "./NavbarItem/NavbarItem";
 import { createBrowserHistory } from "history";
 import { Router, Switch } from "react-router-dom";
-import PrivateRoute from "../Components/PrivateRoute";
-import FindUser from "../FindUser/FindUser";
-import ChatList from "../ChatList/ChatList";
-import Settings from "../Settings/Settings";
-import { useI18n } from "../Components/i18nContext";
+import PrivateRoute from "../Shared/PrivateRoute";
+import FindUser from "./FindUser/FindUser";
+import ChatList from "./ChatList/ChatList";
+import Settings from "./Settings/Settings";
+import { useI18n } from "../Shared/i18nContext";
 import "./Body.css";
 
 export default function Body({ isUserNew }) {
