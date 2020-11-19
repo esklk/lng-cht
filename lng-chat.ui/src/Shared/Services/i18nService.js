@@ -70,6 +70,15 @@ export class i18n {
   get singOut() {
     return resources[this.#locale].singOut;
   }
+  get sayHello() {
+    return resources[this.#locale].sayHello;
+  }
+  get aFewWordsAboutYou() {
+    return resources[this.#locale].aFewWordsAboutYou;
+  }
+  get somethingWentWrong() {
+    return resources[this.#locale].somethingWentWrong;
+  }
 }
 
 const resources = {
@@ -95,5 +104,8 @@ const resources = {
     isRequired: "is required",
     failedToSaveData: "Failed to save data",
     singOut: "Sign Out",
+    sayHello: "Say hello",
+    aFewWordsAboutYou: "A few words about you",
+    somethingWentWrong: "Something went wrong :("
   },
 };

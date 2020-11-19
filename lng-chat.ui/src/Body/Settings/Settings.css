@@ -29,3 +29,22 @@
   margin-right: 5px;
   margin-bottom: -3px;
 }
+.MuiAvatar-root.user-profile-image {
+  width: 75px;
+  height: 75px;
+  cursor: pointer;
+}
+.MuiBadge-root {
+  margin: 0 auto;
+}
+.user-profile-image-wrapper {
+  display: flex;
+}
+.user-profile-image-wrapper .column-input {
+  margin-left: 10px;
+  width: calc(100% - 100px);
+}
+.user-profile-image-wrapper .MuiBadge-root{
+  margin: 0;
+}
+

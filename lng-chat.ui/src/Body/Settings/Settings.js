@@ -10,6 +10,8 @@ import {
   FormLabel,
   FormControlLabel,
   Button,
+  Avatar,
+  IconButton,
 } from "@material-ui/core";
 import React, { useState, useRef, useEffect } from "react";
 import { Alert, Skeleton } from "@material-ui/lab";
@@ -20,6 +22,10 @@ import { useI18n } from "../../Shared/i18nContext";
 import { i18nService } from "../../Shared/Services/i18nService";
 import { Brightness7, ExitToApp, NightsStay } from "@material-ui/icons";
 import { accountService } from "../../Shared/Services/accountService";
+import ImageUploading from "react-images-uploading";
+import Badge from "@material-ui/core/Badge";
+import Resizer from "react-image-file-resizer";
+import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 
 const langs = ISO6391.getLanguages(ISO6391.getAllCodes());
 const languageLevelMarks = [
@@ -66,6 +72,22 @@ const getCleanUserLanguageList = (userLangs) =>
       return { code: lang.value, level: lang.rate };
     });
 
+const resizeFile = (file) =>
+  new Promise((resolve) => {
+    Resizer.imageFileResizer(
+      file,
+      300,
+      300,
+      "JPEG",
+      100,
+      0,
+      (uri) => {
+        resolve(uri);
+      },
+      "base64"
+    );
+  });
+
 export default function Settings() {
   const [errorMessage, setErrorMessage] = useState();
 
@@ -99,11 +121,13 @@ export default function Settings() {
     if (user) {
       setLanguagesToLearn(user.languagesToLearn);
       setLanguagesToTeach(user.languagesToTeach);
+      setProfileImageUrl(user.profileImageUrl);
     }
   }, [user]);
 
   const firstNameRef = useRef();
   const lastNameRef = useRef();
+  const infoRef = useRef();
 
   const [languagesToLearn, setLanguagesToLearn] = useState([]);
   const handleLangsToLearnApply = (value) =>
@@ -112,6 +136,16 @@ export default function Settings() {
   const [languagesToTeach, setLanguagesToTeach] = useState([]);
   const handleLangsToTeachApply = (value) =>
     setLanguagesToTeach(getCleanUserLanguageList(value));
+
+  const [profileImageUrl, setProfileImageUrl] = useState();
+  function handleProfileImageChange(imageList) {
+    resizeFile(imageList[0].file)
+      .then((resizedDataUrl) => setProfileImageUrl(resizedDataUrl))
+      .catch((error) => {
+        console.log(error);
+        setErrorMessage(i18n.somethingWentWrong);
+      });
+  }
 
   function handleProfileSettingsSaveClick() {
     let userToSave = {
@@ -149,6 +183,10 @@ export default function Settings() {
         <p className="setting-group-header">{i18n.profileSettings}:</p>
         {isLoading ? (
           <>
+            <div>
+              <Skeleton variant="circle" height="75px" width="75px" />
+              <Skeleton variant="text" height="80px" />
+            </div>
             <Skeleton variant="text" height="48px" />
             <Skeleton variant="text" height="48px" />
             <Skeleton variant="text" height="16px" />
@@ -162,6 +200,47 @@ export default function Settings() {
             {errorMessage ? (
               <Alert severity="error">{errorMessage}</Alert>
             ) : null}
+            <ImageUploading
+              onChange={handleProfileImageChange}
+              maxNumber={1}
+              dataURLKey="data_url"
+            >
+              {({ onImageUpload }) => (
+                <div className="user-profile-image-wrapper">
+                  <Badge
+                    overlap="circle"
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    badgeContent={
+                      <IconButton
+                        onClick={() => setProfileImageUrl(null)}
+                        size="small"
+                      >
+                        <HighlightOffRoundedIcon />
+                      </IconButton>
+                    }
+                  >
+                    <Avatar
+                      className="user-profile-image"
+                      onClick={onImageUpload}
+                      alt={`${user.firstName} ${user.lastName}`}
+                      src={profileImageUrl}
+                    />
+                  </Badge>
+                  <TextField
+                    multiline
+                    max-rows={3}
+                    rows={3}
+                    className="column-input"
+                    defaultValue={user.info}
+                    inputRef={infoRef}
+                    label={i18n.aFewWordsAboutYou}
+                  />
+                </div>
+              )}
+            </ImageUploading>
             <TextField
               required
               className="row-input"
