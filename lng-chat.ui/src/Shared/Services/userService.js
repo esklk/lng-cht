@@ -31,5 +31,5 @@ function getUserAsync() {
 }
 
 function updateUserAsync(userData) {
-  return api.patchAsync("users/current", userData);
+  return api.patchAsync("users/current", userData).then((response) => response.json());
 }

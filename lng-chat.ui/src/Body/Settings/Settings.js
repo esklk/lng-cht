@@ -121,13 +121,13 @@ export default function Settings() {
     if (user) {
       setLanguagesToLearn(user.languagesToLearn);
       setLanguagesToTeach(user.languagesToTeach);
-      setProfileImageUrl(user.profileImageUrl);
+      setProfilePictureUrl(user.profilePictureUrl);
     }
   }, [user]);
 
   const firstNameRef = useRef();
   const lastNameRef = useRef();
-  const infoRef = useRef();
+  const bioRef = useRef();
 
   const [languagesToLearn, setLanguagesToLearn] = useState([]);
   const handleLangsToLearnApply = (value) =>
@@ -137,10 +137,10 @@ export default function Settings() {
   const handleLangsToTeachApply = (value) =>
     setLanguagesToTeach(getCleanUserLanguageList(value));
 
-  const [profileImageUrl, setProfileImageUrl] = useState();
+  const [profilePictureUrl, setProfilePictureUrl] = useState();
   function handleProfileImageChange(imageList) {
     resizeFile(imageList[0].file)
-      .then((resizedDataUrl) => setProfileImageUrl(resizedDataUrl))
+      .then((resizedDataUrl) => setProfilePictureUrl(resizedDataUrl))
       .catch((error) => {
         console.log(error);
         setErrorMessage(i18n.somethingWentWrong);
@@ -151,8 +151,10 @@ export default function Settings() {
     let userToSave = {
       firstName: firstNameRef.current.value,
       lastName: lastNameRef.current.value,
+      bio: bioRef.current.value,
       languagesToLearn,
       languagesToTeach,
+      profilePictureUrl
     };
     if (!userToSave.firstName) {
       setErrorMessage(`${i18n.firstName} ${i18n.isRequired}`);
@@ -198,7 +200,7 @@ export default function Settings() {
         ) : (
           <>
             {errorMessage ? (
-              <Alert severity="error">{errorMessage}</Alert>
+              <><Alert severity="error">{errorMessage}</Alert><br/></>
             ) : null}
             <ImageUploading
               onChange={handleProfileImageChange}
@@ -215,7 +217,7 @@ export default function Settings() {
                     }}
                     badgeContent={
                       <IconButton
-                        onClick={() => setProfileImageUrl(null)}
+                        onClick={() => setProfilePictureUrl(null)}
                         size="small"
                       >
                         <HighlightOffRoundedIcon />
@@ -226,7 +228,7 @@ export default function Settings() {
                       className="user-profile-image"
                       onClick={onImageUpload}
                       alt={`${user.firstName} ${user.lastName}`}
-                      src={profileImageUrl}
+                      src={profilePictureUrl}
                     />
                   </Badge>
                   <TextField
@@ -234,8 +236,8 @@ export default function Settings() {
                     max-rows={3}
                     rows={3}
                     className="column-input"
-                    defaultValue={user.info}
-                    inputRef={infoRef}
+                    defaultValue={user.bio}
+                    inputRef={bioRef}
                     label={i18n.aFewWordsAboutYou}
                   />
                 </div>

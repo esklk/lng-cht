@@ -39,6 +39,7 @@
 }
 .user-profile-image-wrapper {
   display: flex;
+  justify-content: space-between;
 }
 .user-profile-image-wrapper .column-input {
   margin-left: 10px;
