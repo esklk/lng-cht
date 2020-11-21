@@ -31,14 +31,28 @@ namespace LngChat.WebAPI.Controllers
                 return Unauthorized(result.ErrorMessage);
             }
 
-            var (user, isNew) = await _userService.GetUserAsync(result.Email, result.FirstName, result.LastName);
+            var user = await _userService.GetUserAsync(result.Email);
 
-            var accessToken = _accessTokenGenerator.Generate(new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) });
-
-            if (isNew)
+            if(user == null)
             {
+                user = await _userService.CreateUserAsync(new Business.Models.UserModel
+                {
+                    Email = result.Email,
+                    FirstName = result.FirstName,
+                    LastName = result.LastName,
+                    ProfilePictureUrl = result.ProfilePictureUrl
+                });
+
                 Response.StatusCode = (int)HttpStatusCode.Created;
             }
+
+            var accessToken = _accessTokenGenerator.Generate(new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.GivenName,user.FirstName),
+                new Claim(ClaimTypes.Surname,user.LastName)
+            });
 
             return new { accessToken };
         }

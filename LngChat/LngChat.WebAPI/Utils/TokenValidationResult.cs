@@ -10,14 +10,17 @@
 
         public bool Success { get; set; }
 
+        public string ProfilePictureUrl { get; set; }
+
         public string ErrorMessage { get; set; }
 
-        public TokenValidationResult(string email, string firstName, string lastName)
+        public TokenValidationResult(string email, string firstName, string lastName, string profilePictureUrl)
         {
             Success = true;
             Email = email;
             FirstName = firstName;
             LastName = lastName;
+            ProfilePictureUrl = profilePictureUrl;
         }
 
         public TokenValidationResult(string errorMessage)

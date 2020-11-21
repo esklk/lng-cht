@@ -22,31 +22,24 @@ namespace LngChat.Business.Services
             _fileService = fileService;
         }
 
-        public async Task<(UserModel user, bool isNew)> GetUserAsync(string email, string firstName, string lastName)
+        public async Task<UserModel> GetUserAsync(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
                 throw new ArgumentException("The value must not be null, empty or whitespace string.", nameof(email));
             }
 
-            var storedAccount = await _mapper.ProjectTo<UserModel>(_context.Users).SingleOrDefaultAsync(x => x.Email == email);
+            return await _mapper.ProjectTo<UserModel>(_context.Users).SingleOrDefaultAsync(x => x.Email == email);
+        }
 
-            if (storedAccount != null)
-            {
-                return (storedAccount, false);
-            }
+        public async Task<UserModel> CreateUserAsync(UserModel userModel)
+        {
+            var userToSave = _mapper.Map<User>(userModel ?? throw new ArgumentNullException(nameof(userModel)));
 
-            var newUser = new User
-            {
-                Email = email,
-                FirstName = firstName,
-                LastName = lastName
-            };
-
-            _context.Users.Add(newUser);
+            _context.Users.Add(userToSave);
             await _context.SaveChangesAsync();
 
-            return (_mapper.Map<UserModel>(newUser), true);
+            return _mapper.Map<UserModel>(userToSave);
         }
 
         public async Task<UserModel> GetUserAsync(int id)

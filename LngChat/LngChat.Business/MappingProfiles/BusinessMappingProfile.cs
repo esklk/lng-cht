@@ -15,7 +15,7 @@ namespace LngChat.Business.MappingProfiles
                 .ForMember(d => d.LanguagesToTeach, m => m.MapFrom(s => s.Languages.Where(x => x.ToTeach)));
             CreateMap<UserModel, User>()
                 .ForMember(d => d.Id, m => m.Ignore())
-                .ForMember(d => d.Email, m => m.Ignore())
+                .ForMember(d => d.Email, m => m.Condition(s => !string.IsNullOrWhiteSpace(s.Email)))
                 .ForMember(d => d.Languages, m => m.MapFrom(s => new List<LanguageInfo>()
                     .Concat(s.LanguagesToLearn
                         .Select(x => new LanguageInfo

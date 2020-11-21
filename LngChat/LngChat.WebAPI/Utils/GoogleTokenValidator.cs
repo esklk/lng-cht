@@ -22,7 +22,7 @@ namespace LngChat.WebAPI.Utils
                     Audience = new[] { _credentials.Id }
                 });
 
-                return new TokenValidationResult(result.Email, result.GivenName, result.FamilyName);
+                return new TokenValidationResult(result.Email, result.GivenName, result.FamilyName, result.Picture);
             }
             catch (InvalidJwtException ex)
             {
