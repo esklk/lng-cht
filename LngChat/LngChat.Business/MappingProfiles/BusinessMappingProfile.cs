@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using LngChat.Business.Models;
 using LngChat.Data.Models;
-using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
 using System.Linq;
 

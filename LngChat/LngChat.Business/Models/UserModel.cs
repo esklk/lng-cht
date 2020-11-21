@@ -15,6 +15,10 @@ namespace LngChat.Business.Models
 
         public string LastName { get; set; }
 
+        public string Bio { get; set; }
+
+        public string ProfilePictureUrl { get; set; }
+
         public IEnumerable<LanguageInfoModel> LanguagesToLearn { get; set; }
 
         public IEnumerable<LanguageInfoModel> LanguagesToTeach{ get; set; }

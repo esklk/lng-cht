@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using LngChat.Business.Models;
 using LngChat.Data;
 using LngChat.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace LngChat.Business.Services
@@ -15,11 +13,13 @@ namespace LngChat.Business.Services
     {
         private readonly LngChatDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IFileService _fileService;
 
-        public UserService(LngChatDbContext context, IMapper mapper)
+        public UserService(LngChatDbContext context, IMapper mapper, IFileService fileService)
         {
             _context = context;
             _mapper = mapper;
+            _fileService = fileService;
         }
 
         public async Task<(UserModel user, bool isNew)> GetUserAsync(string email, string firstName, string lastName)
@@ -54,18 +54,29 @@ namespace LngChat.Business.Services
             return await _mapper.ProjectTo<UserModel>(_context.Users).SingleOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<UserModel> UpdateUserAsync(UserModel user)
+        public async Task<UserModel> UpdateUserAsync(UserModel userModel)
         {
-            if(user == null)
+            if(userModel == null)
             {
-                throw new ArgumentNullException(nameof(user));
+                throw new ArgumentNullException(nameof(userModel));
             }
 
-            var dbUser = await _context.Users.Include(x => x.Languages).SingleOrDefaultAsync(x => x.Id == user.Id);
+            var dbUser = await _context.Users.Include(x => x.Languages).SingleOrDefaultAsync(x => x.Id == userModel.Id);
+
             if (dbUser != null)
             {
-                _mapper.Map(user, dbUser);
+                userModel.ProfilePictureUrl = await _fileService
+                    .CreateIfDifferentAsync(userModel.ProfilePictureUrl, dbUser.ProfilePictureUrl, x => x.Type == ContentType.Image);
+
+                var filePathToDelete = userModel.ProfilePictureUrl != dbUser.ProfilePictureUrl ? dbUser.ProfilePictureUrl : null;
+
+                _mapper.Map(userModel, dbUser);
                 await _context.SaveChangesAsync();
+
+                if (!string.IsNullOrWhiteSpace(filePathToDelete))
+                {
+                    _fileService.DeleteFile(filePathToDelete);
+                }
             }
 
             return _mapper.Map<UserModel>(dbUser);
@@ -73,7 +84,7 @@ namespace LngChat.Business.Services
 
         public async Task<UserModel[]> GetUsersAsync(UserFilterModel userFilterModel, params int[] userIdsToExclude)
         {
-            var languageIds = await GetLanguageIds(userFilterModel.LanguagesToLearn, userFilterModel.LanguagesToTeach);
+            var languageIds = await GetLanguageIdsAsync(userFilterModel.LanguagesToLearn, userFilterModel.LanguagesToTeach);
 
             return languageIds.Any() 
                 ? await _mapper.ProjectTo<UserModel>(_context.Users
@@ -83,7 +94,7 @@ namespace LngChat.Business.Services
                 : Array.Empty<UserModel>();
         }
 
-        private async Task<int[]> GetLanguageIds(LanguageFilterModel[] languagesToLearn, LanguageFilterModel[] languagesToTeach) 
+        private async Task<int[]> GetLanguageIdsAsync(LanguageFilterModel[] languagesToLearn, LanguageFilterModel[] languagesToTeach)
         {
             var codes = languagesToLearn
                 .Select(x => x.Code)

@@ -2,17 +2,18 @@ using AutoMapper;
 using LngChat.Business.MappingProfiles;
 using LngChat.Business.Services;
 using LngChat.Data;
+using LngChat.WebAPI.Extensions;
 using LngChat.WebAPI.Settings;
 using LngChat.WebAPI.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System.Linq;
 
 namespace LngChat.WebAPI
 {
@@ -30,7 +31,7 @@ namespace LngChat.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var jwtOptions = Configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
+            var jwtOptions = Configuration.GetJwtOptions();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(x =>
                 {
@@ -46,22 +47,30 @@ namespace LngChat.WebAPI
                     };
                 });
 
-            var allowedCorsOrigins = Configuration.GetSection("AllowedCorsOrigins").Get<string[]>();
-            var oAuthCredentials = Configuration.GetSection("OAuth").GetChildren().ToDictionary(k => k.Key, e => e.Get<OAuthCredentials>());
+            var allowedCorsOrigins = Configuration.GetAllowedCorsOrigins();
+            var googleOAuthCredentials = Configuration.GetOAuthCredentials("Google");
+            var langChatDbConfiguration = Configuration.GetDatabaseConfiguration("LangChat");
 
-            var langChatDbConnectionString = Configuration.GetConnectionString("LangChatDb");
             services
+                .AddHttpContextAccessor()
                 .AddCors(options => options.AddPolicy(AllowSpecificOrigins, builder => builder
                     .WithOrigins(allowedCorsOrigins)
                     .AllowAnyMethod()
                     .AllowAnyHeader()))
-                .AddDbContext<LngChatDbContext>(x => x.UseMySql(langChatDbConnectionString))
+                .AddDbContext<LngChatDbContext>(x => x.UseMySql(langChatDbConfiguration.ConnectionString, new MySqlServerVersion(langChatDbConfiguration.ServerVersion)))
                 .AddAutoMapper(typeof(BusinessMappingProfile))
                 .AddSingleton<IJwtOptions>(jwtOptions)
                 .AddSingleton<IAccessTokenGenerator, JwtAccessTokenGenerator>()
-                .AddSingleton(oAuthCredentials["Google"])
+                .AddSingleton(googleOAuthCredentials)
                 .AddScoped<ITokenValidator, GoogleTokenValidator>()
-                .AddScoped<IUserService, UserService>();
+                .AddScoped<IUserService, UserService>()
+                .AddScoped<IFileService>(x =>
+                    {
+                        var env = x.GetRequiredService<IWebHostEnvironment>();
+                        var request = x.GetRequiredService<IHttpContextAccessor>().HttpContext.Request;
+
+                        return new FileService(env.WebRootPath, $"{request.Scheme}://{request.Host.Value}/");
+                    });
 
             services.AddControllers();
         }
@@ -79,6 +88,7 @@ namespace LngChat.WebAPI
                 .UseCors(AllowSpecificOrigins)
                 .UseAuthentication()
                 .UseAuthorization()
+                .UseStaticFiles()
                 .UseEndpoints(endpoints =>
                 {
                     endpoints.MapControllers();

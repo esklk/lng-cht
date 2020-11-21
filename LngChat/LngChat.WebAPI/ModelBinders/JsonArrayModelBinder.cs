@@ -40,9 +40,6 @@ namespace LngChat.WebAPI.ModelBinders
                 property.SetValue(model, propertyValue);
             }
 
-            ValueProviderResult val = bindingContext.ValueProvider.GetValue(
-                bindingContext.ModelName);
-
             bindingContext.Result = ModelBindingResult.Success(model);
         }
     }

@@ -15,6 +15,10 @@ namespace LngChat.Data.Models
 
         public string LastName { get; set; }
 
+        public string Bio { get; set; }
+
+        public string ProfilePictureUrl { get; set; }
+
         public ICollection<LanguageInfo> Languages { get; set; }
 
         public ICollection<UserChat> UserChats { get; set; }
