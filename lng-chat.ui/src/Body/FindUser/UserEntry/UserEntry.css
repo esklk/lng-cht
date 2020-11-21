@@ -1,0 +1,38 @@
+.user-entry-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: solid 1px var(--bg-color-medium);
+  margin: 0;
+  padding: 5px;
+}
+.user-entry-container:last-child {
+  border-bottom: none;
+}
+.user-entry-langs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.language-entry .language-entry-circle-bottom {
+  color: var(--bg-color-medium);
+}
+.language-entry .language-entry-circle-top {
+  position: absolute;
+  left: 0;
+}
+.user-name {
+  text-align: center;
+}
+
+@media (max-width: 575.98px) {
+  .btn-hello-label {
+    display: none;
+  }
+  .user-entry-container .MuiButton-root {
+    min-width: 0;
+  }
+  .user-name {
+    max-width: 100px;
+  }
+}

@@ -38,3 +38,8 @@
   background-color: var(--bg-color-light);
   padding: 15px;
 }
+@media (max-width: 575.98px) {
+  .content {
+    padding: 5px;
+  }
+}

@@ -79,6 +79,9 @@ export class i18n {
   get somethingWentWrong() {
     return resources[this.#locale].somethingWentWrong;
   }
+  get nothingCouldBeFound() {
+    return resources[this.#locale].nothingCouldBeFound;
+  }
 }
 
 const resources = {
@@ -106,6 +109,7 @@ const resources = {
     singOut: "Sign Out",
     sayHello: "Say hello",
     aFewWordsAboutYou: "A few words about you",
-    somethingWentWrong: "Something went wrong :("
+    somethingWentWrong: "Something went wrong :(",
+    nothingCouldBeFound: "Nothing could be found :("
   },
 };
