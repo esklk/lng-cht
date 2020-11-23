@@ -62,8 +62,10 @@ namespace LngChat.WebAPI
                 .AddSingleton<IJwtOptions>(jwtOptions)
                 .AddSingleton<IAccessTokenGenerator, JwtAccessTokenGenerator>()
                 .AddSingleton(googleOAuthCredentials)
+                .AddScoped<ICurrentUserInfoProvider, ClaimsCurrentUserInfoProvider>()
                 .AddScoped<ITokenValidator, GoogleTokenValidator>()
                 .AddScoped<IUserService, UserService>()
+                .AddScoped<IChatService, ChatService>()
                 .AddScoped<IFileService>(x =>
                     {
                         var env = x.GetRequiredService<IWebHostEnvironment>();

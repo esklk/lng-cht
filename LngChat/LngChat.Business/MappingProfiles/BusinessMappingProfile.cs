@@ -10,6 +10,8 @@ namespace LngChat.Business.MappingProfiles
     {
         public BusinessMappingProfile()
         {
+            int currentUserId = 0;
+
             CreateMap<User, UserModel>()
                 .ForMember(d => d.LanguagesToLearn, m => m.MapFrom(s => s.Languages.Where(x => x.ToLearn)))
                 .ForMember(d => d.LanguagesToTeach, m => m.MapFrom(s => s.Languages.Where(x => x.ToTeach)));
@@ -35,6 +37,18 @@ namespace LngChat.Business.MappingProfiles
                         }))));
             CreateMap<LanguageInfo, LanguageInfoModel>()
                 .ForMember(d => d.Level, m => m.MapFrom(s => (int)s.Level));
+            CreateMap<Message, MessageModel>()
+                .ForMember(d => d.SenderId, m => m.MapFrom(s => s.Sender.Id));
+            CreateMap<Chat, ChatPreviewModel>()
+                .ForMember(d => d.LatestMessage, m => m.MapFrom(s => s.Messages.OrderByDescending(x => x.SentAt).FirstOrDefault()))
+                .ForMember(d => d.Name, m => m.MapFrom(s => s.Name ?? s.UserChats
+                    .Where(x => x.User.Id == currentUserId)
+                    .Select(x => x.User.FirstName + " " + x.User.LastName)
+                    .Single()))
+                .ForMember(d => d.PictureUrl, m => m.MapFrom(s => s.UserChats
+                    .Where(x => x.User.Id == currentUserId)
+                    .Select(x => x.User.ProfilePictureUrl)
+                    .Single()));
         }
     }
 }
