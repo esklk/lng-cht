@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace LngChat.Data.Models
 {
@@ -14,5 +15,7 @@ namespace LngChat.Data.Models
 
         [Required]
         public string Text { get; set; }
+
+        public DateTime SentAt { get; set; }
     }
 }
