@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LngChat.Data.Models
 {
@@ -7,7 +8,9 @@ namespace LngChat.Data.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        public int SenderId { get; set; }
+
+        [ForeignKey(nameof(SenderId))]
         public User Sender { get; set; }
 
         [Required]
