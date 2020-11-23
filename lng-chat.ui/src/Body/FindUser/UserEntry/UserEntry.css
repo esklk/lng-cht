@@ -14,10 +14,13 @@
   justify-content: center;
   align-items: center;
 }
-.language-entry .language-entry-circle-bottom {
+.language-entry-circle{
+  margin: 1px;
+}
+.language-entry .language-entry-circle.bottom {
   color: var(--bg-color-medium);
 }
-.language-entry .language-entry-circle-top {
+.language-entry .language-entry-circle.top {
   position: absolute;
   left: 0;
 }

@@ -13,14 +13,14 @@ import { useI18n } from "../../../Shared/i18nContext";
 const languageEntry = (code, level) => (
   <Box className="language-entry" position="relative" display="inline-flex">
     <CircularProgress
-      className="language-entry-circle-bottom"
+      className="language-entry-circle bottom"
       variant="static"
       value={100}
       size={25}
       thickness={5}
     />
     <CircularProgress
-      className="language-entry-circle-top"
+      className="language-entry-circle top"
       variant="static"
       value={level * 20}
       size={25}
