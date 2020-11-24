@@ -42,13 +42,13 @@ namespace LngChat.Business.MappingProfiles
             CreateMap<Chat, ChatPreviewModel>()
                 .ForMember(d => d.LatestMessage, m => m.MapFrom(s => s.Messages.OrderByDescending(x => x.SentAt).FirstOrDefault()))
                 .ForMember(d => d.Name, m => m.MapFrom(s => s.Name ?? s.UserChats
-                    .Where(x => x.User.Id == currentUserId)
+                    .Where(x => x.User.Id != currentUserId)
                     .Select(x => x.User.FirstName + " " + x.User.LastName)
-                    .Single()))
+                    .First()))
                 .ForMember(d => d.PictureUrl, m => m.MapFrom(s => s.UserChats
-                    .Where(x => x.User.Id == currentUserId)
+                    .Where(x => x.User.Id != currentUserId)
                     .Select(x => x.User.ProfilePictureUrl)
-                    .Single()));
+                    .First()));
         }
     }
 }
