@@ -5,8 +5,12 @@ import { useI18n } from "../../Shared/i18nContext";
 import { userService } from "../../Shared/Services/userService";
 import UserEntry from "./UserEntry/UserEntry";
 
+const limit = 20;
+
 export default function FindUser() {
   const [isLoading, setIsLoading] = useState(true);
+  const [langFilter, setLangFilter] = useState();
+  const [page, setPage] = useState(0);
   const [searchResults, setSearchResults] = useState([]);
   const i18n = useI18n();
 
@@ -24,19 +28,39 @@ export default function FindUser() {
           }),
         };
       })
-      .then((langFilter) =>
-        userService.getUsersAsync(langFilter.toLearn, langFilter.toTeach, 100, 0)
-      )
-      .then((users) => setSearchResults(users))
-      .catch((error) => console.error("Error while loading user list.", error))
+      .then((langFilter) => setLangFilter(langFilter))
+      .catch((error) => console.error("Error while loading user.", error))
       .finally(() => setIsLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (!langFilter) {
+      return;
+    }
+
+    setIsLoading(true);
+    userService
+      .getUsersAsync(
+        langFilter.toLearn,
+        langFilter.toTeach,
+        limit,
+        limit * page
+      )
+      .then((users) => {
+        console.log(users);
+        setSearchResults(users);
+      })
+      .catch((error) => console.error("Error while loading user list.", error))
+      .finally(() => setIsLoading(false));
+  }, [langFilter, page]);
+
+  //TODO: add page update by scroll
 
   return isLoading ? (
     <div className="search-results-loader-container">
       <CircularProgress />
     </div>
-  ) : (
+  ) : searchResults ? (
     <div className="search-results-container">
       {searchResults.map((user) => (
         <UserEntry
@@ -47,7 +71,11 @@ export default function FindUser() {
           languagesToLearn={user.languagesToLearn}
           languagesToTeach={user.languagesToTeach}
         />
-      )) || i18n.nothingCouldBeFound}
+      ))}
+    </div>
+  ) : (
+    <div className="search-results-loader-container">
+      {i18n.nothingCouldBeFound}
     </div>
   );
 }
