@@ -14,6 +14,7 @@ export default function RateableCheckboxListInput({
   marks,
   onApply,
   className,
+  tip,
 }) {
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -84,6 +85,7 @@ export default function RateableCheckboxListInput({
           </DialogContent>
         </DialogContent>
         <DialogActions>
+          <p className="dialog-tip">{tip}</p>
           <Button onClick={handleCancelClick}>Cancel</Button>
           <Button onClick={handleOkClick}>Ok</Button>
         </DialogActions>

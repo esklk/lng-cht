@@ -15,49 +15,30 @@ import {
 } from "@material-ui/core";
 import React, { useState, useRef, useEffect } from "react";
 import { Alert, Skeleton } from "@material-ui/lab";
-import ISO6391 from "iso-639-1";
 import RateableCheckboxListInput from "./RateableCheckboxListInput/RateableCheckboxListInput";
 import { userService } from "../../Shared/Services/userService";
 import { useI18n } from "../../Shared/i18nContext";
 import { i18nService } from "../../Shared/Services/i18nService";
 import { Brightness7, ExitToApp, NightsStay } from "@material-ui/icons";
 import { accountService } from "../../Shared/Services/accountService";
+import { languageService } from "../../Shared/Services/languageService";
 import ImageUploading from "react-images-uploading";
 import Badge from "@material-ui/core/Badge";
 import Resizer from "react-image-file-resizer";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 
-const langs = ISO6391.getLanguages(ISO6391.getAllCodes());
-const languageLevelMarks = [
-  {
-    value: 0,
-    label: "A1",
-  },
-  {
-    value: 1,
-    label: "A2",
-  },
-  {
-    value: 2,
-    label: "B1",
-  },
-  {
-    value: 3,
-    label: "B2",
-  },
-  {
-    value: 4,
-    label: "C1",
-  },
-  {
-    value: 5,
-    label: "C2",
-  },
-];
+const langs = languageService.getLanguagesMetadata();
+const languageLevelMarks = languageService.getLanguageLevels().map((level) => {
+  return { value: level.index, label: level.shortName };
+});
 const getFullUserLanguageList = (userLangs) =>
   langs.map((lang) => {
-    let result = { key: lang.code, value: lang.code, text: lang.nativeName };
-    let userLang = userLangs.filter((x) => x.code === lang.code)[0];
+    let result = {
+      key: lang.languageCode,
+      value: lang.languageCode,
+      text: lang.nativeName,
+    };
+    let userLang = userLangs.filter((x) => x.code === lang.languageCode)[0];
     if (userLang) {
       result.checked = true;
       result.rate = userLang.level;
@@ -154,7 +135,7 @@ export default function Settings() {
       bio: bioRef.current.value,
       languagesToLearn,
       languagesToTeach,
-      profilePictureUrl
+      profilePictureUrl,
     };
     if (!userToSave.firstName) {
       setErrorMessage(`${i18n.firstName} ${i18n.isRequired}`);
@@ -179,6 +160,12 @@ export default function Settings() {
 
   const i18n = useI18n();
 
+  const languageLevelTip = (
+    <a target="_blank" rel="noreferrer" href={i18n.wikipediaCefrLevelsUrl}>
+      {i18n.iNeedHelpToRecognizeMyLevel}
+    </a>
+  );
+
   return (
     <div className="settings">
       <div className="setting-group">
@@ -200,7 +187,10 @@ export default function Settings() {
         ) : (
           <>
             {errorMessage ? (
-              <><Alert severity="error">{errorMessage}</Alert><br/></>
+              <>
+                <Alert severity="error">{errorMessage}</Alert>
+                <br />
+              </>
             ) : null}
             <ImageUploading
               onChange={handleProfileImageChange}
@@ -263,6 +253,7 @@ export default function Settings() {
               label={i18n.languagesToLearn}
               marks={languageLevelMarks}
               onApply={handleLangsToLearnApply}
+              tip={languageLevelTip}
             />
             <RateableCheckboxListInput
               className="row-input"
@@ -270,6 +261,7 @@ export default function Settings() {
               label={i18n.languagesToTeach}
               marks={languageLevelMarks}
               onApply={handleLangsToTeachApply}
+              tip={languageLevelTip}
             />
             <br />
             <Button
@@ -327,10 +319,10 @@ export default function Settings() {
           >
             {langs
               .filter((lang) =>
-                i18nService.availableLocales.includes(lang.code)
+                i18nService.availableLocales.includes(lang.languageCode)
               )
               .map((lang) => (
-                <MenuItem key={lang.code} value={lang.code}>
+                <MenuItem key={lang.languageCode} value={lang.languageCode}>
                   {lang.nativeName}
                 </MenuItem>
               ))}

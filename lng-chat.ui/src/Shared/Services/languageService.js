@@ -1,6 +1,7 @@
 export const languageService = {
   getLanguageMetadata,
   getLanguagesMetadata,
+  getLanguageLevels
 };
 
 export class LanguageMetadata {
@@ -54,12 +55,51 @@ export class LanguageMetadata {
   }
 }
 
+export class LanguageLevel {
+  #index;
+  #shortName;
+  /**
+   * @param {int} index The index of the level
+   * @param {string} shortName The CEFR name of the level
+   */
+  constructor(index, shortName) {
+    this.#index = index;
+    this.#shortName = shortName;
+  }
+  /**
+   * @returns {int} index The index of the level
+   */
+  get index() {
+    return this.#index;
+  }
+  /**
+   * @returns {string} shortName The CEFR name of the level
+   */
+  get shortName() {
+    return this.#shortName;
+  }
+}
+
+/**
+ * @returns {LanguageLevel[]}
+ */
+function getLanguageLevels() {
+  return [
+    new LanguageLevel(0, "A1"),
+    new LanguageLevel(1, "A2"),
+    new LanguageLevel(2, "B1"),
+    new LanguageLevel(3, "B2"),
+    new LanguageLevel(4, "C1"),
+    new LanguageLevel(5, "C2"),
+  ];
+}
+
 /**
  * @param {string} code The ISO639-1 language code
  * @returns {LanguageMetadata}
  */
 function getLanguageMetadata(code) {
-  let data = datasource.find((x) => x.languageCode === code);
+  let data = languagesMetadataDatasource.find((x) => x.languageCode === code);
   if (!data) {
     return null;
   }
@@ -77,7 +117,7 @@ function getLanguageMetadata(code) {
  * @returns {LanguageMetadata[]}
  */
 function getLanguagesMetadata() {
-  return datasource.map(
+  return languagesMetadataDatasource.map(
     (data) =>
       new LanguageMetadata(
         data.languageCode,
@@ -88,7 +128,7 @@ function getLanguagesMetadata() {
   );
 }
 
-const datasource = [
+const languagesMetadataDatasource = [
   {
     languageCode: "aa",
     languageName: "Afar",

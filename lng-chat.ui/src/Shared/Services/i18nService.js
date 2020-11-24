@@ -82,6 +82,12 @@ export class i18n {
   get nothingCouldBeFound() {
     return resources[this.#locale].nothingCouldBeFound;
   }
+  get iNeedHelpToRecognizeMyLevel() {
+    return resources[this.#locale].iNeedHelpToRecognizeMyLevel;
+  }
+  get wikipediaCefrLevelsUrl() {
+    return resources[this.#locale].wikipediaCefrLevelsUrl;
+  }
 }
 
 const resources = {
@@ -110,6 +116,8 @@ const resources = {
     sayHello: "Say hello",
     aFewWordsAboutYou: "A few words about you",
     somethingWentWrong: "Something went wrong :(",
-    nothingCouldBeFound: "Nothing could be found :("
+    nothingCouldBeFound: "Nothing could be found :(",
+    iNeedHelpToRecognizeMyLevel: "I need help to recognize my level",
+    wikipediaCefrLevelsUrl: "https://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages#Common_reference_levels"
   },
 };
