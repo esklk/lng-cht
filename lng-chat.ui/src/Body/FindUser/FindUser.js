@@ -43,7 +43,7 @@ export default function FindUser() {
           key={user.id}
           firstName={user.firstName}
           lastName={user.lastName}
-          pictureUrl={user.profilePictureUrl}
+          profilePictureUrl={user.profilePictureUrl}
           languagesToLearn={user.languagesToLearn}
           languagesToTeach={user.languagesToTeach}
         />
