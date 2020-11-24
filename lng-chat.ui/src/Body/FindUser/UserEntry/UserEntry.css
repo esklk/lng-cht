@@ -1,6 +1,6 @@
 .user-entry-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   border-bottom: solid 1px var(--bg-color-medium);
   margin: 0;
