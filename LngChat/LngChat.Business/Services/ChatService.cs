@@ -32,6 +32,16 @@ namespace LngChat.Business.Services
                 .ToArrayAsync();
         }
 
+        public async Task<MessageModel[]> GetMessagesAsync(int userId, int chatId, int limit, int offset)
+        {
+            return await _mapper.ProjectTo<MessageModel>(_context
+                    .Messages
+                    .Where(x => x.Chat.Id == chatId && x.Chat.UserChats.Any(x => x.UserId == userId)))
+                .Skip(offset)
+                .Take(limit)
+                .ToArrayAsync();
+        }
+
         public async Task SendMessageAsync(int senderUserId, int recieverUserId, string messageText)
         {
             if (string.IsNullOrWhiteSpace(messageText))

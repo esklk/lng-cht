@@ -30,6 +30,13 @@ namespace LngChat.WebAPI.Controllers
             return await _chatService.GetChatListAsync(_currentUserInfoProvider.Id, filter.Limit, filter.Offset);
         }
 
+        [HttpGet]
+        [Route("{chatId}/messages")]
+        public async Task<MessageModel[]> GetMessagesAsync(int chatId, [FromQuery]PagingFilterModel filter)
+        {
+            return await _chatService.GetMessagesAsync(_currentUserInfoProvider.Id, chatId, filter.Limit, filter.Offset);
+        }
+
         [HttpPost]
         [Route("messages")]
         public async Task SendMessageAsync([Required]int toUserId, [Required]string messageText)
