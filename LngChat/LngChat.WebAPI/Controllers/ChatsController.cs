@@ -25,9 +25,9 @@ namespace LngChat.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ChatPreviewModel[]> GetChatListAsync()
+        public async Task<ChatPreviewModel[]> GetChatListAsync([FromQuery]PagingFilterModel filter)
         {
-            return await _chatService.GetChatListAsync(_currentUserInfoProvider.Id);
+            return await _chatService.GetChatListAsync(_currentUserInfoProvider.Id, filter.Limit, filter.Offset);
         }
 
         [HttpPost]

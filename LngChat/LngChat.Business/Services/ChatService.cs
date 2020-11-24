@@ -21,12 +21,15 @@ namespace LngChat.Business.Services
             _mapper = mapper;
         }
 
-        public async Task<ChatPreviewModel[]> GetChatListAsync(int userId)
+        public async Task<ChatPreviewModel[]> GetChatListAsync(int userId, int limit, int offset)
         {
             return await _mapper
                 .ProjectTo<ChatPreviewModel>(_context
                     .Chats
-                    .Where(x => x.UserChats.Any(x => x.UserId == userId)), new { currentUserId = userId }).ToArrayAsync();
+                    .Where(x => x.UserChats.Any(x => x.UserId == userId)), new { currentUserId = userId })
+                .Skip(offset)
+                .Take(limit)
+                .ToArrayAsync();
         }
 
         public async Task SendMessageAsync(int senderUserId, int recieverUserId, string messageText)
