@@ -14,7 +14,7 @@
   justify-content: center;
   align-items: center;
 }
-.language-entry-circle{
+.language-entry-circle {
   margin: 1px;
 }
 .language-entry .language-entry-circle.bottom {
@@ -38,4 +38,10 @@
   .user-name {
     max-width: 100px;
   }
+}
+.flag-icon {
+  box-shadow: 0 0 5px 0px rgba(0, 0, 0, 0.5) inset;
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
 }

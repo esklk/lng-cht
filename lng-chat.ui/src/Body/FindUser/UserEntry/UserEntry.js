@@ -1,17 +1,31 @@
 import "./UserEntry.css";
-import {
-  Avatar,
-  Box,
-  Button,
-  CircularProgress,
-  Typography,
-} from "@material-ui/core";
+import { Avatar, Box, Button, CircularProgress } from "@material-ui/core";
 import { EmojiPeopleRounded, SwapHorizRounded } from "@material-ui/icons";
 import React from "react";
 import { useI18n } from "../../../Shared/i18nContext";
+import { languageService } from "../../../Shared/Services/languageService";
 
 const languageEntry = (code, level) => (
   <Box className="language-entry" position="relative" display="inline-flex">
+    <Box
+      top={0}
+      left={0}
+      bottom={0}
+      right={0}
+      position="absolute"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+    >
+      <div
+        className="flag-icon"
+        style={{
+          backgroundImage: `url(${
+            languageService.getLanguageMetadata(code).flag
+          })`,
+        }}
+      />
+    </Box>
     <CircularProgress
       className="language-entry-circle bottom"
       variant="static"
@@ -26,20 +40,6 @@ const languageEntry = (code, level) => (
       size={25}
       thickness={5}
     />
-    <Box
-      top={0}
-      left={0}
-      bottom={0}
-      right={0}
-      position="absolute"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Typography variant="caption" component="div" color="textPrimary">
-        {code}
-      </Typography>
-    </Box>
   </Box>
 );
 
