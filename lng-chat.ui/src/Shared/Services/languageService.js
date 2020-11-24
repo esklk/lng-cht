@@ -82,7 +82,7 @@ function getLanguagesMetadata() {
       new LanguageMetadata(
         data.languageCode,
         data.languageName,
-        data.LanguageNativeName,
+        data.languageNativeName,
         data.countryCode
       )
   );
