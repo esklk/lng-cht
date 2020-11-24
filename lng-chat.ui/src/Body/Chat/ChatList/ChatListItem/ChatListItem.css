@@ -1,0 +1,24 @@
+button.chat-list-item-container {
+  display: flex;
+  align-items: center;
+  border-bottom: solid 1px var(--bg-color-medium);
+  padding: 5px;
+  width: 100%;
+  border-radius: 0;
+  justify-content: flex-start;
+}
+.chat-list-item-data {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5px;
+}
+.chat-list-item-data p {
+  padding: 0;
+  margin: 0;
+  text-transform: none;
+  text-align: left;
+}
+.chat-list-item-data-description {
+  font-size: 12px;
+  font-weight: normal;
+}

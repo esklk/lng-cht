@@ -4,7 +4,7 @@ import { createBrowserHistory } from "history";
 import { Router, Switch } from "react-router-dom";
 import PrivateRoute from "../Shared/PrivateRoute";
 import FindUser from "./FindUser/FindUser";
-import ChatList from "./ChatList/ChatList";
+import Chat from "./Chat/Chat";
 import Settings from "./Settings/Settings";
 import { useI18n } from "../Shared/i18nContext";
 import "./Body.css";
@@ -51,7 +51,7 @@ export default function Body({ isUserNew }) {
               <PrivateRoute
                 exact
                 path="/chat"
-                component={ChatList}
+                component={Chat}
               ></PrivateRoute>
               <PrivateRoute
                 exact
