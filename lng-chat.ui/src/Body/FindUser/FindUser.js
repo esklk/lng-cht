@@ -10,7 +10,8 @@ const limit = 20;
 export default function FindUser() {
   const [isLoading, setIsLoading] = useState(true);
   const [langFilter, setLangFilter] = useState();
-  const [page, setPage] = useState(0);
+  // eslint-disable-next-line
+  const [page, setPage] = useState(0);//TODO: update page when scrolled to bottom
   const [searchResults, setSearchResults] = useState([]);
   const i18n = useI18n();
 

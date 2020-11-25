@@ -7,7 +7,7 @@ export const accountService = {
   get userId() {
     var token = localStorage.getItem("accessToken");
     if (!token) {
-      throw "Access token is missing.";
+      throw new Error("Access token is missing.");
     }
 
     return jwt.decode(token)[

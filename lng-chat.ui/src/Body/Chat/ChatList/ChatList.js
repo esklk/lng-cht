@@ -9,7 +9,8 @@ const limit = 100;
 
 export default function ChatList({ onChatSelected }) {
   const [isLoading, setIsLoading] = useState(true);
-  const [page, setPage] = useState(0);
+  // eslint-disable-next-line
+  const [page, setPage] = useState(0);//TODO: update page when scrolled to bottom
   const [chats, setChats] = useState([]);
   const i18n = useI18n();
 

@@ -1,7 +1,7 @@
 import "./MessageSender.css";
 import React, { useRef, useState } from "react";
 import { useI18n } from "../../../../Shared/i18nContext";
-import { CircularProgress, IconButton, TextField } from "@material-ui/core";
+import { IconButton, TextField } from "@material-ui/core";
 import {
   DeleteForeverRounded,
   MicOffRounded,
@@ -32,7 +32,7 @@ const resizeImage = (file) =>
     );
   });
 
-export default function MessageSender({ onSendMessage }) {
+export default function MessageSender({ onMessageSend }) {
   const messageInputRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -72,7 +72,7 @@ export default function MessageSender({ onSendMessage }) {
 
   const handleDeleteImageButtonClick = (dataUrlToDelete) => {
     setImageDataUrlsToUpload((x) =>
-      x.filter((dataUrl) => dataUrl != dataUrlToDelete)
+      x.filter((dataUrl) => dataUrl !== dataUrlToDelete)
     );
   };
 
@@ -118,7 +118,11 @@ export default function MessageSender({ onSendMessage }) {
                 >
                   <DeleteForeverRounded />
                 </IconButton>
-                <img key={dataUrl.slice(-10)} src={dataUrl} />
+                <img
+                  key={dataUrl.slice(-10)}
+                  src={dataUrl}
+                  alt="Upload preview"
+                />
               </div>
             ))}
           </div>
