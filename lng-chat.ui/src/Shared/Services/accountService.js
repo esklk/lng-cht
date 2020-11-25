@@ -4,12 +4,22 @@ var jwt = require("jsonwebtoken");
 export const accountService = {
   authenticate,
   logout,
+  get userId() {
+    var token = localStorage.getItem("accessToken");
+    if (!token) {
+      throw "Access token is missing.";
+    }
+
+    return jwt.decode(token)[
+      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+    ];
+  },
   get accessToken() {
     var token = localStorage.getItem("accessToken");
     if (!token) {
       return null;
     }
-    
+
     var tokenExp = jwt.decode(token).exp;
     if (Date.now() >= tokenExp * 1000) {
       localStorage.removeItem("accessToken");
