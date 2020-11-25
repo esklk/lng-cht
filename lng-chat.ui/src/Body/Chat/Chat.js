@@ -4,16 +4,16 @@ import ChatList from "./ChatList/ChatList";
 import Messages from "./Messages/Messages";
 
 export default function Chat() {
-  const [selectedChatId, setSelectedChatId] = useState();
+  const [selectedChat, setSelectedChat] = useState();
 
-  const handleChatSelected = (id) => {
-    setSelectedChatId(id);
+  const handleChatSelected = (chat) => {
+    setSelectedChat(chat);
   };
 
   return (
     <div className="chats-container">
       <ChatList onChatSelected={handleChatSelected} />
-      <Messages chatId={selectedChatId} />
+      <Messages chatId={selectedChat?.id} chatName={selectedChat?.name} />
     </div>
   );
 }

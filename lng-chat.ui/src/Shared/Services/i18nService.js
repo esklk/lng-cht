@@ -91,6 +91,21 @@ export class i18n {
   get hereAreNoMessagesYet() {
     return resources[this.#locale].hereAreNoMessagesYet;
   }
+  get typeAMessage() {
+    return resources[this.#locale].typeAMessage;
+  }
+  get pleaseSelectAChat() {
+    return resources[this.#locale].pleaseSelectAChat;
+  }
+  get numberOfSelectedImagesExceedsAllowed() {
+    return resources[this.#locale].numberOfSelectedImagesExceedsAllowed;
+  }
+  get selectedImageSizeExceedsAllowed() {
+    return resources[this.#locale].selectedImageSizeExceedsAllowed;
+  }
+  get pleaseWait() {
+    return resources[this.#locale].pleaseWait;
+  }
 }
 
 const resources = {
@@ -121,7 +136,13 @@ const resources = {
     somethingWentWrong: "Something went wrong :(",
     nothingCouldBeFound: "Nothing could be found :(",
     iNeedHelpToRecognizeMyLevel: "I need help to recognize my level",
-    wikipediaCefrLevelsUrl: "https://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages#Common_reference_levels",
-    hereAreNoMessagesYet: "Here are no messages yet"
+    wikipediaCefrLevelsUrl:
+      "https://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages#Common_reference_levels",
+    hereAreNoMessagesYet: "Here are no messages yet",
+    typeAMessage: "Type a message...",
+    pleaseSelectAChat: "Please select a chat",
+    numberOfSelectedImagesExceedsAllowed: "Number of selected images exceeds allowed",
+    selectedImageSizeExceedsAllowed: "Selected image size exceeds allowed",
+    pleaseWait: "Please wait...",
   },
 };

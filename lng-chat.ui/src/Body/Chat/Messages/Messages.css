@@ -5,12 +5,14 @@
   flex-direction: column;
   border-left: solid 1px var(--bg-color-medium);
   overflow: hidden;
+  justify-content: space-between;
 }
-.messages-loader-container {
+.messages-middle-container {
   display: flex;
   flex: 1 1 100%;
   justify-content: center;
   align-items: center;
+  border-left: solid 1px var(--bg-color-medium);
 }
 .message-list {
   flex-direction: column;
@@ -19,4 +21,10 @@
   padding: 0 10px;
   overflow-y: auto;
   overflow-x: hidden;
+  flex: 1 0 200px;
+}
+.chat-header {
+  border-bottom: solid var(--bg-color-medium) 1px;
+  box-shadow: 0 0 5px rgba(0,0,0,.2);
+  padding: 10px;
 }

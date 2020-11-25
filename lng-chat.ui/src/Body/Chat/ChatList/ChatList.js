@@ -24,7 +24,8 @@ export default function ChatList({ onChatSelected }) {
 
   const handleChatListItemClick = (chatId) => {
     if (onChatSelected) {
-      onChatSelected(chatId);
+      var chat = chats.find(x=>x.id === chatId);
+      onChatSelected(chat);
     }
   };
 

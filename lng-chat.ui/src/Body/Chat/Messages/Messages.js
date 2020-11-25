@@ -1,14 +1,15 @@
 import "./Messages.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { chatService } from "../../../Shared/Services/chatService";
 import { useI18n } from "../../../Shared/i18nContext";
 import { CircularProgress } from "@material-ui/core";
 import { accountService } from "../../../Shared/Services/accountService";
 import MessageBubble from "./MessageBubble/MessageBubble";
+import MessageSender from "./MessageSender/MessageSender";
 
 const limit = 100;
 
-export default function Messages({ chatId }) {
+export default function Messages({ chatId, chatName }) {
   const userId = parseInt(accountService.userId);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -33,27 +34,33 @@ export default function Messages({ chatId }) {
       .finally(() => setIsLoading(false));
   }, [page, chatId]);
 
-  return (
-    <div className="messages-container">
-      {isLoading ? (
-        <div className="messages-loader-container">
-          <CircularProgress />
-        </div>
-      ) : messages ? (
-        <div className="message-list">
-          {messages.map((message, index) => (
-            <MessageBubble
-              userId={userId}
-              message={message}
-              next-message={
-                messages.length < index + 1 ? messages[index + 1] : null
-              }
-            />
-          ))}
-        </div>
-      ) : (
-        i18n.hereAreNoMessagesYet
-      )}
-    </div>
+  return chatId ? (
+    isLoading ? (
+      <div className="messages-middle-container">
+        <CircularProgress />
+      </div>
+    ) : (
+      <div className="messages-container">
+        <div className="chat-header">{chatName}</div>
+        {messages ? (
+          <div className="message-list">
+            {messages.map((message, index) => (
+              <MessageBubble
+                userId={userId}
+                message={message}
+                next-message={
+                  messages.length < index + 1 ? messages[index + 1] : null
+                }
+              />
+            ))}
+          </div>
+        ) : (
+          i18n.hereAreNoMessagesYet
+        )}
+        <MessageSender />
+      </div>
+    )
+  ) : (
+    <div className="messages-middle-container">{i18n.pleaseSelectAChat}</div>
   );
 }
