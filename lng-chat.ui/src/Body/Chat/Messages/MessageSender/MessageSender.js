@@ -12,6 +12,7 @@ import {
 import ImageUploading from "react-images-uploading";
 import Resizer from "react-image-file-resizer";
 import { Alert } from "@material-ui/lab";
+import { useVoiceRecorder } from "use-voice-recorder";
 
 const maximumImageCount = 10;
 const maximumFileSizeMB = 100;
@@ -34,8 +35,26 @@ const resizeImage = (file) =>
 
 export default function MessageSender({ onMessageSend }) {
   const messageInputRef = useRef();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
+  const [isLoading, setIsLoading] = useState();
+  const {
+    isRecording,
+    stop: stopRecording,
+    start: startRecording,
+  } = useVoiceRecorder((data) => {
+    new Promise((resolve) => {
+      setIsLoading(true);
+      let reader = new FileReader();
+      reader.onload = function () {
+        let dataURL = reader.result;
+        resolve(dataURL);
+      };
+      reader.readAsDataURL(data);
+    })
+      .then((dataUrl) => setVoiceDataUrlToUpload(dataUrl))
+      .catch(() => setError(i18n.somethingWentWrong))
+      .finally(() => setIsLoading(false));
+  });
+  const [voiceDataUrlToUpload, setVoiceDataUrlToUpload] = useState();
   const [imageDataUrlsToUpload, setImageDataUrlsToUpload] = useState([]);
   const [error, setError] = useState();
   const i18n = useI18n();
@@ -104,23 +123,29 @@ export default function MessageSender({ onMessageSend }) {
           </div>
         )}
       </ImageUploading>
-      <IconButton className="btn-record-voice">
+      <IconButton
+        onClick={() => (isRecording ? stopRecording() : startRecording())}
+        className="btn-record-voice"
+      >
         {isRecording ? <MicOffRounded /> : <MicRounded />}
       </IconButton>
       <div className="message-data">
         {imageDataUrlsToUpload.length > 0 ? (
           <div className="image-list-preview">
-            {imageDataUrlsToUpload.map((dataUrl) => (
+            {imageDataUrlsToUpload.map((imageDataUrl) => (
               <div className="image-preview-item">
                 <IconButton
-                  onClick={handleDeleteImageButtonClick.bind(this, dataUrl)}
+                  onClick={handleDeleteImageButtonClick.bind(
+                    this,
+                    imageDataUrl
+                  )}
                   className="btn-delete"
                 >
                   <DeleteForeverRounded />
                 </IconButton>
                 <img
-                  key={dataUrl.slice(-10)}
-                  src={dataUrl}
+                  key={imageDataUrl.slice(-10)}
+                  src={imageDataUrl}
                   alt="Upload preview"
                 />
               </div>
