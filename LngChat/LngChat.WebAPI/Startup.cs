@@ -90,7 +90,10 @@ namespace LngChat.WebAPI
                 .UseCors(AllowSpecificOrigins)
                 .UseAuthentication()
                 .UseAuthorization()
-                .UseStaticFiles()
+                .UseStaticFiles(new StaticFileOptions
+                {
+                    ServeUnknownFileTypes = true
+                })
                 .UseEndpoints(endpoints =>
                 {
                     endpoints.MapControllers();
