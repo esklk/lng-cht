@@ -31,10 +31,14 @@ export default function ChatList({ onChatSelected }) {
   return (
     <div className="chat-list">
       {isLoading ? (
-        <CircularProgress />
+        <div className="chats-loader-container">
+          <CircularProgress />
+        </div>
       ) : chats ? (
         chats.map((chat) => (
           <ChatListItem
+            key={chat.id}
+            id={chat.id}
             pictureUrl={chat.pictureUrl}
             label={chat.name}
             description={chat.latestMessage.text}

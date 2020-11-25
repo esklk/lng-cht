@@ -11,7 +11,7 @@ export default function ChatListItem({
 }) {
   const handleClick = () => {
     if (onClick) {
-      onClick(id);
+      onClick(parseInt(id));
     }
   };
 

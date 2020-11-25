@@ -1,0 +1,14 @@
+.chat-list {
+  display: flex;
+  flex: 0 0 300px;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.chats-loader-container {
+  display: flex;
+  flex: 1 1 100%;
+  justify-content: center;
+  align-items: center;
+}
