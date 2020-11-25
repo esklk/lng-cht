@@ -4,6 +4,7 @@ import { chatService } from "../../../Shared/Services/chatService";
 import { useI18n } from "../../../Shared/i18nContext";
 import { CircularProgress } from "@material-ui/core";
 import { accountService } from "../../../Shared/Services/accountService";
+import MessageBubble from "./MessageBubble/MessageBubble";
 
 const limit = 100;
 
@@ -40,26 +41,18 @@ export default function Messages({ chatId }) {
         </div>
       ) : messages ? (
         <div className="message-list">
-          {messages.map((message, index) => {
-            return (
-              <div
-                key={message.id}
-                className={`${
-                  message.senderId === userId ? "outgoing" : "incoming"
-                } message${
-                  messages.length === index + 1 ||
-                  messages[index + 1].senderId !== message.senderId
-                    ? " last"
-                    : ""
-                }`}
-              >
-                {message.text}
-              </div>
-            );
-          })}
+          {messages.map((message, index) => (
+            <MessageBubble
+              userId={userId}
+              message={message}
+              next-message={
+                messages.length < index + 1 ? messages[index + 1] : null
+              }
+            />
+          ))}
         </div>
       ) : (
-        i18n.nothingCouldBeFound
+        i18n.hereAreNoMessagesYet
       )}
     </div>
   );

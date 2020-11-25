@@ -88,6 +88,9 @@ export class i18n {
   get wikipediaCefrLevelsUrl() {
     return resources[this.#locale].wikipediaCefrLevelsUrl;
   }
+  get hereAreNoMessagesYet() {
+    return resources[this.#locale].hereAreNoMessagesYet;
+  }
 }
 
 const resources = {
@@ -118,6 +121,7 @@ const resources = {
     somethingWentWrong: "Something went wrong :(",
     nothingCouldBeFound: "Nothing could be found :(",
     iNeedHelpToRecognizeMyLevel: "I need help to recognize my level",
-    wikipediaCefrLevelsUrl: "https://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages#Common_reference_levels"
+    wikipediaCefrLevelsUrl: "https://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages#Common_reference_levels",
+    hereAreNoMessagesYet: "Here are no messages yet"
   },
 };

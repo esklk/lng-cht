@@ -1,0 +1,73 @@
+.message {
+  border-radius: 20px;
+  padding: 8px 15px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  display: inline-block;
+  width: auto;
+}
+
+.incoming {
+  align-self: flex-start;
+}
+
+.incoming.message {
+  margin-right: 25%;
+  background-color: var(--bg-color-dark);
+  position: relative;
+}
+
+.incoming.message.last:before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  bottom: 0;
+  left: -7px;
+  height: 20px;
+  width: 20px;
+  background-color: var(--bg-color-dark);
+  border-bottom-right-radius: 15px;
+}
+.incoming.message.last:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: -10px;
+  width: 10px;
+  height: 20px;
+  background-color: var(--bg-color-light);
+  border-bottom-right-radius: 10px;
+}
+.outgoing {
+  align-self: flex-end;
+}
+.outgoing.message {
+  margin-left: 25%;
+  background-color: var(--accent-color);
+  background-attachment: fixed;
+  position: relative;
+}
+.outgoing.message.last:before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  bottom: 0;
+  right: -8px;
+  height: 20px;
+  width: 20px;
+  background-color: var(--accent-color);
+  background-attachment: fixed;
+  border-bottom-left-radius: 15px;
+}
+.outgoing.message.last:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  right: -10px;
+  width: 10px;
+  height: 20px;
+  background-color: var(--bg-color-light);
+  border-bottom-left-radius: 10px;
+}
