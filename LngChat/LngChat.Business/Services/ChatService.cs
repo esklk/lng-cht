@@ -37,6 +37,7 @@ namespace LngChat.Business.Services
             return await _mapper.ProjectTo<MessageModel>(_context
                     .Messages
                     .Where(x => x.Chat.Id == chatId && x.Chat.UserChats.Any(x => x.UserId == userId)))
+                .OrderBy(x => x.SentAt)
                 .Skip(offset)
                 .Take(limit)
                 .ToArrayAsync();

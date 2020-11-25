@@ -39,7 +39,7 @@ namespace LngChat.WebAPI.Controllers
 
         [HttpPost]
         [Route("messages")]
-        public async Task SendMessageAsync([Required]int toUserId, [Required]string messageText)
+        public async Task SendMessageAsync([FromQuery][Required]int toUserId, [FromBody][Required]string messageText)
         {
             await _chatService.SendMessageAsync(_currentUserInfoProvider.Id, toUserId, messageText);
         }
