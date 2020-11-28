@@ -3,6 +3,7 @@ using LngChat.Business.MappingProfiles;
 using LngChat.Business.Services;
 using LngChat.Data;
 using LngChat.WebAPI.Extensions;
+using LngChat.WebAPI.Hubs;
 using LngChat.WebAPI.Settings;
 using LngChat.WebAPI.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -51,12 +52,15 @@ namespace LngChat.WebAPI
             var googleOAuthCredentials = Configuration.GetOAuthCredentials("Google");
             var langChatDbConfiguration = Configuration.GetDatabaseConfiguration("LangChat");
 
+            services.AddSignalR();
+
             services
                 .AddHttpContextAccessor()
                 .AddCors(options => options.AddPolicy(AllowSpecificOrigins, builder => builder
                     .WithOrigins(allowedCorsOrigins)
                     .AllowAnyMethod()
-                    .AllowAnyHeader()))
+                    .AllowAnyHeader()
+                    .AllowCredentials()))
                 .AddDbContext<LngChatDbContext>(x => x.UseMySql(langChatDbConfiguration.ConnectionString, new MySqlServerVersion(langChatDbConfiguration.ServerVersion)))
                 .AddAutoMapper(typeof(BusinessMappingProfile))
                 .AddSingleton<IJwtOptions>(jwtOptions)
@@ -97,6 +101,7 @@ namespace LngChat.WebAPI
                 .UseEndpoints(endpoints =>
                 {
                     endpoints.MapControllers();
+                    endpoints.MapHub<ChatHub>("/chat");
                 });
         }
     }

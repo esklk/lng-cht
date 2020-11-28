@@ -85,7 +85,7 @@ namespace LngChat.Business.Services
 
             chat.Messages.Add(new Message
             {
-                Text = messageText,
+                Content = messageText,
                 SentAt = DateTime.UtcNow,
                 SenderId = senderUserId
             });

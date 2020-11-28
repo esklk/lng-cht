@@ -6,6 +6,7 @@ import { accountService } from "./Shared/Services/accountService";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import i18nContext from "./Shared/i18nContext";
 import { i18n } from "./Shared/Services/i18nService";
+const signalR = require("@microsoft/signalr");
 
 const theme = createMuiTheme({
   palette: {
@@ -19,6 +20,16 @@ const theme = createMuiTheme({
 const resources = new i18n(localStorage.getItem("lang"));
 
 export default function App() {
+  let connection = new signalR.HubConnectionBuilder()
+    .withUrl("https://localhost:44361/chat")
+    .build();
+  connection.on("send", (data) => {
+    console.log(data);
+  });
+  connection
+    .start({ withCredentials: false })
+    .then(() => connection.invoke("send", "Hello"));
+
   const [authData, setAuthData] = React.useState({
     accessToken: accountService.accessToken,
     isNew: false,
