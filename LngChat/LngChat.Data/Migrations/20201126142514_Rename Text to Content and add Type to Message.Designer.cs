@@ -3,14 +3,16 @@ using System;
 using LngChat.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LngChat.Data.Migrations
 {
     [DbContext(typeof(LngChatDbContext))]
-    partial class LngChatDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201126142514_Rename Text to Content and add Type to Message")]
+    partial class RenameTexttoContentandaddTypetoMessage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

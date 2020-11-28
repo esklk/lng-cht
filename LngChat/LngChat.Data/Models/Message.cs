@@ -17,7 +17,10 @@ namespace LngChat.Data.Models
         public Chat Chat { get; set; }
 
         [Required]
-        public string Text { get; set; }
+        public MessageType Type { get; set; } = MessageType.Text;
+
+        [Required]
+        public string Content { get; set; }
 
         public DateTime SentAt { get; set; }
     }
