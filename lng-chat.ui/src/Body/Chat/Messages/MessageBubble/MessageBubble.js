@@ -12,6 +12,6 @@ export default function MessageBubble({userId, message, nextMessage}) {
       : ""
   }`}
 >
-  {message.text}
+  {message.content}
 </div>;
 }

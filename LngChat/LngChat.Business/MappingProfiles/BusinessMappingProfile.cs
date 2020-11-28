@@ -38,7 +38,8 @@ namespace LngChat.Business.MappingProfiles
             CreateMap<LanguageInfo, LanguageInfoModel>()
                 .ForMember(d => d.Level, m => m.MapFrom(s => (int)s.Level));
             CreateMap<Message, MessageModel>()
-                .ForMember(d => d.SenderId, m => m.MapFrom(s => s.Sender.Id));
+                .ForMember(d => d.SenderId, m => m.MapFrom(s => s.Sender.Id))
+                .ForMember(d => d.Type, m => m.MapFrom(s => s.Type.ToString()));
             CreateMap<Chat, ChatPreviewModel>()
                 .ForMember(d => d.LatestMessage, m => m.MapFrom(s => s.Messages.OrderByDescending(x => x.SentAt).FirstOrDefault()))
                 .ForMember(d => d.Name, m => m.MapFrom(s => s.Name ?? s.UserChats
