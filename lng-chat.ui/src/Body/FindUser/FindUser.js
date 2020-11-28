@@ -48,7 +48,6 @@ export default function FindUser() {
         limit * page
       )
       .then((users) => {
-        console.log(users);
         setSearchResults(users);
       })
       .catch((error) => console.error("Error while loading user list.", error))

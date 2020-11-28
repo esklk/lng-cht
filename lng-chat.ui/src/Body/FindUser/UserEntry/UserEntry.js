@@ -68,13 +68,17 @@ export default function UserEntry({
   const i18n = useI18n();
   const fullName = `${firstName} ${lastName}`;
   return (
-    <div class="user-entry-container">
+    <div className="user-entry-container">
       <Avatar alt={fullName} src={profilePictureUrl} />
       <p className="user-name">{fullName}</p>
       <div className="user-entry-langs">
-        {languagesToTeach?.map((lang) => languageEntry(lang.code, lang.level))}
+        {languagesToTeach?.map((lang, index) => (
+          <div key={index}>{languageEntry(lang.code, lang.level)}</div>
+        ))}
         {languagesToLearn && languagesToTeach ? <SwapHorizRounded /> : null}
-        {languagesToLearn.map((lang) => languageEntry(lang.code, lang.level))}
+        {languagesToLearn.map((lang, index) => (
+          <div key={index}>{languageEntry(lang.code, lang.level)}</div>
+        ))}
       </div>
       <Button>
         <EmojiPeopleRounded />
