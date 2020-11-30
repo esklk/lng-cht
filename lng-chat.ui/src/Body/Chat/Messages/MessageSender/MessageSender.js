@@ -13,6 +13,7 @@ import ImageUploading from "react-images-uploading";
 import Resizer from "react-image-file-resizer";
 import { Alert } from "@material-ui/lab";
 import { useVoiceRecorder } from "use-voice-recorder";
+import VoiceMessagePlayer from "../VoiceMessagePlayer/VoiceMessagePlayer";
 
 const maximumImageCount = 10;
 const maximumFileSizeMB = 100;
@@ -51,7 +52,11 @@ export default function MessageSender({ onMessageSend }) {
       reader.readAsDataURL(data);
     })
       .then((dataUrl) => setVoiceDataUrlToUpload(dataUrl))
-      .catch(() => setError(i18n.somethingWentWrong))
+      .then(() => setImageDataUrlsToUpload([]))
+      .catch((error) => {
+        console.error(error);
+        setError(i18n.somethingWentWrong);
+      })
       .finally(() => setIsLoading(false));
   });
   const [voiceDataUrlToUpload, setVoiceDataUrlToUpload] = useState();
@@ -74,6 +79,11 @@ export default function MessageSender({ onMessageSend }) {
       .then((compressedDataUrls) =>
         setImageDataUrlsToUpload((x) => x.concat(compressedDataUrls))
       )
+      .then(() => setVoiceDataUrlToUpload(null))
+      .catch((error) => {
+        console.error(error);
+        setError(i18n.somethingWentWrong);
+      })
       .finally(() => setIsLoading(false));
   };
 
@@ -151,6 +161,8 @@ export default function MessageSender({ onMessageSend }) {
               </div>
             ))}
           </div>
+        ) : voiceDataUrlToUpload ? (
+          <VoiceMessagePlayer src={voiceDataUrlToUpload} />
         ) : (
           <TextField
             multiline
