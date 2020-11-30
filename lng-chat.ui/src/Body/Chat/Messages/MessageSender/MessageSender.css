@@ -7,7 +7,7 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 .message-input-container .message-data {
-  flex: 1 0 200px;
+  flex: 1 0 100px;
   margin: 0 5px;
 }
 .message-input-container .message-data div {

@@ -1,5 +1,30 @@
 .chats-container {
+  display: flex;
+  height: 100%;
+}
+.chat-list {
+  display: flex;
+  flex: 0 0 300px;
+}
+.messages {
+  display: flex;
+  flex: 0 1 100%;
+}
+@media (max-width: 700px) {
+  .chat-list {
+    flex-basis: 100%;
+  }
+  .messages {
+    display: none;
+  }
+
+  .messages.opened {
     display: flex;
-    justify-content: space-between;
-    height: 100%;
+    flex: 1 1 100%;
+    position: fixed;
+    width: 100%;
+    height: calc(100% - 47px);
+    background-color: var(--bg-color-light);
+    left: 0;
+  }
 }

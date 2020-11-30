@@ -7,10 +7,10 @@ import ChatListItem from "./ChatListItem/ChatListItem";
 
 const limit = 100;
 
-export default function ChatList({ onChatSelected }) {
+export default function ChatList({ onChatSelected, ...props }) {
   const [isLoading, setIsLoading] = useState(true);
   // eslint-disable-next-line
-  const [page, setPage] = useState(0);//TODO: update page when scrolled to bottom
+  const [page, setPage] = useState(0); //TODO: update page when scrolled to bottom
   const [chats, setChats] = useState([]);
   const i18n = useI18n();
 
@@ -25,30 +25,32 @@ export default function ChatList({ onChatSelected }) {
 
   const handleChatListItemClick = (chatId) => {
     if (onChatSelected) {
-      var chat = chats.find(x=>x.id === chatId);
+      var chat = chats.find((x) => x.id === chatId);
       onChatSelected(chat);
     }
   };
 
   return (
-    <div className="chat-list">
+    <div {...props}>
       {isLoading ? (
         <div className="chats-loader-container">
           <CircularProgress />
         </div>
       ) : chats ? (
-        chats.map((chat) => (
-          <ChatListItem
-            key={chat.id}
-            id={chat.id}
-            pictureUrl={chat.pictureUrl}
-            label={chat.name}
-            description={chat.latestMessage.text}
-            onClick={handleChatListItemClick}
-          />
-        ))
+        <div className="chat-list-container">
+          {chats.map((chat) => (
+            <ChatListItem
+              key={chat.id}
+              id={chat.id}
+              pictureUrl={chat.pictureUrl}
+              label={chat.name}
+              description={chat.latestMessage.text}
+              onClick={handleChatListItemClick}
+            />
+          ))}
+        </div>
       ) : (
-        i18n.nothingCouldBeFound
+        <div className="chats-loader-container">{i18n.nothingCouldBeFound}</div>
       )}
     </div>
   );

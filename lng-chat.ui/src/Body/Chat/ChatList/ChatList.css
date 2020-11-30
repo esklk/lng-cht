@@ -1,6 +1,6 @@
-.chat-list {
+.chat-list-container {
   display: flex;
-  flex: 0 0 300px;
+  flex: 0 0 100%;
   flex-direction: column;
   height: 100%;
   overflow-y: auto;
