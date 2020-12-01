@@ -23,8 +23,9 @@
     flex: 1 1 100%;
     position: fixed;
     width: 100%;
-    height: calc(100% - 47px);
+    height: calc(100% - 42px);
     background-color: var(--bg-color-light);
     left: 0;
+    top: 42px
   }
 }

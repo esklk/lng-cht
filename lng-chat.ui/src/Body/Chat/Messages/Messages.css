@@ -16,12 +16,18 @@
 }
 .message-list {
   flex-direction: column;
-  margin-top: 30px;
+  justify-content: flex-end;
   display: flex;
   padding: 0 10px;
   overflow-y: auto;
   overflow-x: hidden;
   flex: 0 1 100%;
+}
+.bubbles-container{
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 }
 .chat-header {
   display: flex;
