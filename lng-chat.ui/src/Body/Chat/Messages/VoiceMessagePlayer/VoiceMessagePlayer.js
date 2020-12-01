@@ -33,9 +33,7 @@ export default function VoiceMessagePlayer({ src }) {
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={() => {
           setIsLoading(false);
-          console.log(audioRef.current.duration);
         }}
-        onCanPlay={() => console.log(audioRef.current.duration)}
         ref={audioRef}
         src={src}
       />

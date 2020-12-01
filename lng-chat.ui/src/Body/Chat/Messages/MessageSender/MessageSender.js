@@ -1,7 +1,7 @@
 import "./MessageSender.css";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useI18n } from "../../../../Shared/i18nContext";
-import { IconButton, TextField } from "@material-ui/core";
+import { IconButton, LinearProgress, TextField } from "@material-ui/core";
 import {
   DeleteForeverRounded,
   MicOffRounded,
@@ -17,6 +17,7 @@ import VoiceMessagePlayer from "../VoiceMessagePlayer/VoiceMessagePlayer";
 
 const maximumImageCount = 10;
 const maximumFileSizeMB = 100;
+const maximumRecordingDurationSeconds = 60;
 
 const resizeImage = (file) =>
   new Promise((resolve) => {
@@ -42,6 +43,7 @@ export default function MessageSender({ onMessageSend }) {
     stop: stopRecording,
     start: startRecording,
   } = useVoiceRecorder((data) => {
+    setRecordingDuration(0);
     new Promise((resolve) => {
       setIsLoading(true);
       let reader = new FileReader();
@@ -59,13 +61,45 @@ export default function MessageSender({ onMessageSend }) {
       })
       .finally(() => setIsLoading(false));
   });
+
+  //This is a workaround to stop recording by timeout.
+  const [
+    isRecordingNeedsToBeStopped,
+    setIsRecordingNeedsToBeStopped,
+  ] = useState();
+  if (isRecording && isRecordingNeedsToBeStopped) {
+    try {
+      stopRecording();
+    } catch (error) {
+      if (error.code !== 11) {
+        console.log(error);
+      }
+    } finally {
+      setIsRecordingNeedsToBeStopped(false);
+    }
+  }
+
+  const [recordingDuration, setRecordingDuration] = useState(0);
   const [voiceDataUrlToUpload, setVoiceDataUrlToUpload] = useState();
   const [imageDataUrlsToUpload, setImageDataUrlsToUpload] = useState([]);
   const [error, setError] = useState();
-  const i18n = useI18n();
+
+  useEffect(() => {
+    const timer = isRecording
+      ? setInterval(() => {
+          setRecordingDuration((oldDuration) => {
+            if (oldDuration === maximumRecordingDurationSeconds) {
+              return 0;
+            }
+            return oldDuration + 1;
+          });
+        }, 1000)
+      : null;
+
+    return () => (timer ? clearInterval(timer) : null);
+  }, [isRecording]);
 
   const handleSendButtonClick = () => {
-    console.log(messageInputRef.current.value);
     messageInputRef.current.value = null;
   };
 
@@ -105,6 +139,32 @@ export default function MessageSender({ onMessageSend }) {
     );
   };
 
+  useEffect(() => {
+    if (!isRecording) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      if (isRecording) {
+        setIsRecordingNeedsToBeStopped(true);
+      }
+    }, maximumRecordingDurationSeconds * 1000);
+    return () => clearTimeout(timer);
+  }, [isRecording]);
+
+  const handleRecordVoiceButtonClick = () => {
+    if (isRecording) {
+      stopRecording();
+      return;
+    }
+    startRecording();
+  };
+
+  const handledeleteVoiceButtonClick = () => {
+    setVoiceDataUrlToUpload(null);
+  };
+
+  const i18n = useI18n();
+
   return isLoading ? (
     <div className="middle-container">
       <p>{i18n.pleaseWait}</p>
@@ -134,7 +194,7 @@ export default function MessageSender({ onMessageSend }) {
         )}
       </ImageUploading>
       <IconButton
-        onClick={() => (isRecording ? stopRecording() : startRecording())}
+        onClick={handleRecordVoiceButtonClick}
         className="btn-record-voice"
       >
         {isRecording ? <MicOffRounded /> : <MicRounded />}
@@ -161,8 +221,23 @@ export default function MessageSender({ onMessageSend }) {
               </div>
             ))}
           </div>
+        ) : isRecording ? (
+          <div className="audio-recording-placeholder">
+            <p>{i18n.speakPlease}</p>
+            <LinearProgress
+              variant="determinate"
+              value={
+                100 * (recordingDuration / maximumRecordingDurationSeconds)
+              }
+            />
+          </div>
         ) : voiceDataUrlToUpload ? (
-          <VoiceMessagePlayer src={voiceDataUrlToUpload} />
+          <div className="voice-message-preview-container">
+            <VoiceMessagePlayer src={voiceDataUrlToUpload} />
+            <IconButton onClick={handledeleteVoiceButtonClick}>
+              <DeleteForeverRounded />
+            </IconButton>
+          </div>
         ) : (
           <TextField
             multiline

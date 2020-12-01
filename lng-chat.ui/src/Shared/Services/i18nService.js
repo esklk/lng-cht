@@ -106,6 +106,9 @@ export class i18n {
   get pleaseWait() {
     return resources[this.#locale].pleaseWait;
   }
+  get speakPlease() {
+    return resources[this.#locale].speakPlease;
+  }
 }
 
 const resources = {
@@ -141,8 +144,10 @@ const resources = {
     hereAreNoMessagesYet: "Here are no messages yet",
     typeAMessage: "Type a message...",
     pleaseSelectAChat: "Please select a chat",
-    numberOfSelectedImagesExceedsAllowed: "Number of selected images exceeds allowed",
+    numberOfSelectedImagesExceedsAllowed:
+      "Number of selected images exceeds allowed",
     selectedImageSizeExceedsAllowed: "Selected image size exceeds allowed",
-    pleaseWait: "Please wait...",
+    pleaseWait: "Please wait ...",
+    speakPlease: "Speak please ...",
   },
 };
