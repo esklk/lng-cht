@@ -13,7 +13,9 @@ namespace LngChat.Data.Models
         [ForeignKey(nameof(SenderId))]
         public User Sender { get; set; }
 
-        [Required]
+        public int ChatId { get; set; }
+
+        [ForeignKey(nameof(ChatId))]
         public Chat Chat { get; set; }
 
         [Required]
