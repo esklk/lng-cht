@@ -6,6 +6,8 @@ namespace LngChat.Business.Models
     {
         public int Id { get; set; }
 
+        public int ChatId { get; set; }
+
         public int SenderId { get; set; }
 
         public string Type { get; set; }

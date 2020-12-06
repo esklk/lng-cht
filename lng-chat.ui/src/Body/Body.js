@@ -8,12 +8,14 @@ import Chat from "./Chat/Chat";
 import Settings from "./Settings/Settings";
 import { useI18n } from "../Shared/i18nContext";
 import "./Body.css";
+import { useChat } from "../Shared/ChatContext";
 
 export default function Body({ isUserNew }) {
   const history = createBrowserHistory();
   if (window.location.pathname === "/") {
     history.push(isUserNew ? "/settings" : "/chat");
   }
+  useChat((message) => console.log(message));
 
   const i18n = useI18n();
 
@@ -48,11 +50,7 @@ export default function Body({ isUserNew }) {
                 path="/find"
                 component={FindUser}
               ></PrivateRoute>
-              <PrivateRoute
-                exact
-                path="/chat"
-                component={Chat}
-              ></PrivateRoute>
+              <PrivateRoute exact path="/chat" component={Chat}></PrivateRoute>
               <PrivateRoute
                 exact
                 path="/settings"

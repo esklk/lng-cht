@@ -1,12 +1,11 @@
 ﻿using LngChat.Business.Models;
 using LngChat.Business.Services;
+using LngChat.WebAPI.Hubs.Chat;
+using LngChat.WebAPI.Models;
 using LngChat.WebAPI.Utils;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.SignalR;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LngChat.WebAPI.Controllers
@@ -17,11 +16,13 @@ namespace LngChat.WebAPI.Controllers
     {
         private readonly IChatService _chatService;
         private readonly ICurrentUserInfoProvider _currentUserInfoProvider;
+        private readonly IHubContext<ChatHub, IChatClient> _chatHubContext;
 
-        public ChatsController(IChatService chatService, ICurrentUserInfoProvider currentUserInfoProvider)
+        public ChatsController(IChatService chatService, ICurrentUserInfoProvider currentUserInfoProvider, IHubContext<ChatHub, IChatClient> chatHubContext)
         {
             _chatService = chatService;
             _currentUserInfoProvider = currentUserInfoProvider;
+            _chatHubContext = chatHubContext;
         }
 
         [HttpGet]
@@ -38,10 +39,25 @@ namespace LngChat.WebAPI.Controllers
         }
 
         [HttpPost]
-        [Route("messages")]
-        public async Task SendMessageAsync([FromQuery][Required]int toUserId, [FromBody][Required]string messageText)
+        [Route("{chatId}/messages")]
+        public async Task<MessageModel> SendMessageToChatAsync(int chatId, MessageDataModel messageData)
         {
-            await _chatService.SendMessageAsync(_currentUserInfoProvider.Id, toUserId, messageText);
+            var message = await _chatService.SendMessageToChatAsync(_currentUserInfoProvider.Id, chatId, messageData.ContentType, messageData.Content);
+
+            await _chatHubContext.Clients.Group(message.ChatId.ToString()).Message(message);
+
+            return message;
+        }
+
+        [HttpPost]
+        [Route("messages")]
+        public async Task<MessageModel> SendMessageToUserAsync([FromQuery][Required]int toUserId, MessageDataModel messageData)
+        {
+            var message = await _chatService.SendMessageToUserAsync(_currentUserInfoProvider.Id, toUserId, messageData.ContentType, messageData.Content);
+
+            await _chatHubContext.Clients.Group(message.ChatId.ToString()).Message(message);
+
+            return message;
         }
     }
 }

@@ -3,7 +3,7 @@ using LngChat.Business.MappingProfiles;
 using LngChat.Business.Services;
 using LngChat.Data;
 using LngChat.WebAPI.Extensions;
-using LngChat.WebAPI.Hubs;
+using LngChat.WebAPI.Hubs.Chat;
 using LngChat.WebAPI.Settings;
 using LngChat.WebAPI.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,12 +15,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System.Threading.Tasks;
 
 namespace LngChat.WebAPI
 {
     public class Startup
     {
         private const string AllowSpecificOrigins = "AllowSpecificOrigins";
+        private const string ChatHubAddress = "/chat";
 
         public Startup(IConfiguration configuration)
         {
@@ -45,6 +47,22 @@ namespace LngChat.WebAPI
                         ValidIssuer = jwtOptions.Issuer,
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = jwtOptions.SecurityKey
+                    };
+                    x.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            if (context.HttpContext.Request.Path.StartsWithSegments(ChatHubAddress))
+                            {
+                                var accesToken = context.Request.Query["access_token"];
+                                if (!string.IsNullOrWhiteSpace(accesToken))
+                                {
+                                    context.Token = accesToken;
+                                }
+                            }
+
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 
@@ -101,7 +119,7 @@ namespace LngChat.WebAPI
                 .UseEndpoints(endpoints =>
                 {
                     endpoints.MapControllers();
-                    endpoints.MapHub<ChatHub>("/chat");
+                    endpoints.MapHub<ChatHub>(ChatHubAddress);
                 });
         }
     }
