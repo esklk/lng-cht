@@ -39,7 +39,10 @@ namespace LngChat.Business.MappingProfiles
                 .ForMember(d => d.Level, m => m.MapFrom(s => (int)s.Level));
             CreateMap<Message, MessageModel>()
                 .ForMember(d => d.SenderId, m => m.MapFrom(s => s.Sender.Id))
-                .ForMember(d => d.Type, m => m.MapFrom(s => s.Type.ToString()));
+                .ForMember(d => d.Type, m => m.MapFrom(s => s.Type.ToString()))
+                .ForMember(d => d.IsText, m => m.MapFrom(s => s.Type == MessageType.Text))
+                .ForMember(d => d.IsVoice, m => m.MapFrom(s => s.Type == MessageType.Voice))
+                .ForMember(d => d.IsImage, m => m.MapFrom(s => s.Type == MessageType.Image));
             CreateMap<Chat, ChatPreviewModel>()
                 .ForMember(d => d.LatestMessage, m => m.MapFrom(s => s.Messages.OrderByDescending(x => x.SentAt).FirstOrDefault()))
                 .ForMember(d => d.Name, m => m.MapFrom(s => s.Name ?? s.UserChats

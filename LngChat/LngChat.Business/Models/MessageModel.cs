@@ -12,6 +12,12 @@ namespace LngChat.Business.Models
 
         public string Type { get; set; }
 
+        public bool IsText { get; set; }
+
+        public bool IsVoice { get; set; }
+
+        public bool IsImage { get; set; }
+
         public string Content { get; set; }
 
         public DateTime SentAt { get; set; }

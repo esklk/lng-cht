@@ -4,6 +4,6 @@
     {
         Text = 0,
         Voice = 1,
-        Photo = 2
+        Image = 2
     }
 }
