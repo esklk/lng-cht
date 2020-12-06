@@ -45,7 +45,11 @@
   margin-left: 10px;
   width: calc(100% - 100px);
 }
-.user-profile-image-wrapper .MuiBadge-root{
+.user-profile-image-wrapper .MuiBadge-root {
   margin: 0;
 }
-
+.notifications-switch-container {
+  display: flex;
+  font-size: 12px;
+  justify-content: space-between;
+}

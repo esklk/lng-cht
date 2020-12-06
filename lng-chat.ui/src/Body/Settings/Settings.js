@@ -12,6 +12,7 @@ import {
   Button,
   Avatar,
   IconButton,
+  Switch,
 } from "@material-ui/core";
 import React, { useState, useRef, useEffect } from "react";
 import { Alert, Skeleton } from "@material-ui/lab";
@@ -27,6 +28,7 @@ import Badge from "@material-ui/core/Badge";
 import Resizer from "react-image-file-resizer";
 import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
 
+const isNotificationsSupported = "Notification" in window;
 const langs = languageService.getLanguagesMetadata();
 const languageLevelMarks = languageService.getLanguageLevels().map((level) => {
   return { value: level.index, label: level.shortName };
@@ -84,6 +86,34 @@ export default function Settings() {
     let value = event.target.value;
     setTheme(value);
     localStorage.setItem("theme", value);
+  };
+
+  const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
+    let lsValue = localStorage.getItem("notificationsEnabled");
+    return lsValue && JSON.parse(lsValue);
+  });
+  const handleNotificationsEnabledChange = (event) => {
+    if (!isNotificationsSupported) {
+      setNotificationsEnabled(value);
+      localStorage.setItem("notificationsEnabled", value);
+      return;
+    }
+
+    let value = event.target.checked;
+    if (Notification.permission === "granted") {
+      setNotificationsEnabled(value);
+      localStorage.setItem("notificationsEnabled", value);
+    } else {
+      Notification.requestPermission(function (permission) {
+        if (!("permission" in Notification)) {
+          Notification.permission = permission;
+        }
+        if (permission === "granted") {
+          setNotificationsEnabled(value);
+          localStorage.setItem("notificationsEnabled", value);
+        }
+      });
+    }
   };
 
   const [isLoading, setIsLoading] = useState(true);
@@ -327,7 +357,31 @@ export default function Settings() {
                 </MenuItem>
               ))}
           </Select>
-          <br />
+          {isNotificationsSupported ? (
+            <>
+              <br />
+              <div className="notifications-switch-container">
+                <FormControlLabel
+                  label={i18n.notifications}
+                  labelPlacement="start"
+                  control={
+                    <Switch
+                      checked={notificationsEnabled}
+                      onChange={handleNotificationsEnabledChange}
+                    />
+                  }
+                />
+                <p>
+                  {notificationsEnabled
+                    ? i18n.youWillRecieveNotificationsAboutNewMessages
+                    : i18n.youWillNotRecieveNotificationsAboutNewMessages}
+                </p>
+              </div>
+              <br />
+            </>
+          ) : (
+            <br />
+          )}
           <Button
             onClick={handleLogOutClick}
             size="small"

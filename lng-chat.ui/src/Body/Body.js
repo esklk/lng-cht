@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import NavbarItem from "./NavbarItem/NavbarItem";
 import { createBrowserHistory } from "history";
 import { Router, Switch } from "react-router-dom";
@@ -9,15 +9,48 @@ import Settings from "./Settings/Settings";
 import { useI18n } from "../Shared/i18nContext";
 import "./Body.css";
 import { useChat } from "../Shared/ChatContext";
+import { IconButton, Snackbar } from "@material-ui/core";
+import { Close } from "@material-ui/icons";
 
 export default function Body({ isUserNew }) {
   const history = createBrowserHistory();
   if (window.location.pathname === "/") {
     history.push(isUserNew ? "/settings" : "/chat");
   }
-  useChat((message) => console.log(message));
 
   const i18n = useI18n();
+
+  const [notificationText, setNotificationText] = useState();
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setNotificationText(null);
+  };
+
+  useChat((message) => {
+    console.log(message);
+    let notificationSetting = localStorage.getItem("notificationsEnabled");
+    if (!notificationSetting || !JSON.parse(notificationSetting)) {
+      return;
+    }
+    let notificationText = message.isImage
+      ? i18n.picture
+      : message.isVoice
+      ? i18n.voiceMessage
+      : message.content;
+
+    if ("Notification" in window) {
+      new Notification(i18n.newMessage, {
+        tag: "ache-mail",
+        body: notificationText,
+        icon: "/logo512.png",
+      });
+    }
+
+    setNotificationText(notificationText);
+  });
 
   return (
     <div className="body">
@@ -60,6 +93,28 @@ export default function Body({ isUserNew }) {
           </div>
         </Router>
       </div>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        open={notificationText}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message={notificationText}
+        action={
+          <>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleClose}
+            >
+              <Close fontSize="small" />
+            </IconButton>
+          </>
+        }
+      />
     </div>
   );
 }

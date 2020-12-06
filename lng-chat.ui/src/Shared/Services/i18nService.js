@@ -109,6 +109,24 @@ export class i18n {
   get speakPlease() {
     return resources[this.#locale].speakPlease;
   }
+  get newMessage() {
+    return resources[this.#locale].newMessage;
+  }
+  get voiceMessage() {
+    return resources[this.#locale].voiceMessage;
+  }
+  get picture() {
+    return resources[this.#locale].picture;
+  }
+  get notifications() {
+    return resources[this.#locale].notifications;
+  }
+  get youWillRecieveNotificationsAboutNewMessages() {
+    return resources[this.#locale].youWillRecieveNotificationsAboutNewMessages;
+  }
+  get youWillNotRecieveNotificationsAboutNewMessages() {
+    return resources[this.#locale].youWillNotRecieveNotificationsAboutNewMessages;
+  }
 }
 
 const resources = {
@@ -149,5 +167,11 @@ const resources = {
     selectedImageSizeExceedsAllowed: "Selected image size exceeds allowed",
     pleaseWait: "Please wait ...",
     speakPlease: "Speak please ...",
+    newMessage: "New message",
+    voiceMessage: "Voice message",
+    picture: "Picture",
+    notifications: "Notifications",
+    youWillRecieveNotificationsAboutNewMessages: "You will recieve push-notifications about new messages",
+    youWillNotRecieveNotificationsAboutNewMessages: "You will not recieve push-notifications about new messages",
   },
 };
