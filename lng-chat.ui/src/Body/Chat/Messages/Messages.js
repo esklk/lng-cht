@@ -7,6 +7,7 @@ import { accountService } from "../../../Shared/Services/accountService";
 import MessageBubble from "./MessageBubble/MessageBubble";
 import MessageSender from "./MessageSender/MessageSender";
 import { ArrowBackIosRounded } from "@material-ui/icons";
+import { useChat } from "../../../Shared/ChatContext";
 
 const limit = 100;
 
@@ -42,6 +43,13 @@ export default function Messages({
       )
       .finally(() => setIsLoading(false));
   }, [page, chatId]);
+
+  useChat((message) => {
+    if (message.chatId === chatId) {
+      setMessages([...messages, message]);
+      setPage(0);
+    }
+  });
 
   return (
     <div {...props}>

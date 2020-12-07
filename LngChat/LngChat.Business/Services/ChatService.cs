@@ -84,7 +84,7 @@ namespace LngChat.Business.Services
 
             await _context.SaveChangesAsync();
 
-            return message;
+            return _mapper.Map<MessageModel>(message);
         }
 
         public async Task<MessageModel> SendMessageToChatAsync(int senderUserId, int chatId, string contentType, string content)
@@ -104,10 +104,10 @@ namespace LngChat.Business.Services
 
             await _context.SaveChangesAsync();
 
-            return message;
+            return _mapper.Map<MessageModel>(message);
         }
 
-        private MessageModel AddMessageToChat(Chat chat, int senderUserId, string contentType, string content)
+        private static Message AddMessageToChat(Chat chat, int senderUserId, string contentType, string content)
         {
             if(chat == null)
             {
@@ -135,7 +135,7 @@ namespace LngChat.Business.Services
 
             chat.Messages.Add(message);
 
-            return _mapper.Map<MessageModel>(message);
+            return message;
         }
 
         private IQueryable<Chat> BuildGetUserChatsQuery(int userId, int limit = 0, int offset = 0)

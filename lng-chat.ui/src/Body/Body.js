@@ -15,7 +15,6 @@ import "toasted-notes/src/styles.css";
 export default function Body({ isUserNew }) {
   const history = createBrowserHistory();
   useEffect(() => {
-    console.log("history");
     if (window.location.pathname === "/") {
       history.push(isUserNew ? "/settings" : "/chat");
     }
