@@ -3,6 +3,7 @@ using LngChat.Business.Services;
 using LngChat.WebAPI.Hubs.Chat;
 using LngChat.WebAPI.Models;
 using LngChat.WebAPI.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System.ComponentModel.DataAnnotations;
@@ -12,6 +13,7 @@ namespace LngChat.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ChatsController : ControllerBase
     {
         private readonly IChatService _chatService;
