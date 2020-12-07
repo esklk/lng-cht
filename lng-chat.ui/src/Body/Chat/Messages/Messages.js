@@ -1,5 +1,5 @@
 import "./Messages.css";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { chatService } from "../../../Shared/Services/chatService";
 import { useI18n } from "../../../Shared/i18nContext";
 import { CircularProgress, IconButton } from "@material-ui/core";

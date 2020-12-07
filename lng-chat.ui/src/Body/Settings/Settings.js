@@ -93,26 +93,26 @@ export default function Settings() {
     return lsValue && JSON.parse(lsValue);
   });
   const handleNotificationsEnabledChange = (event) => {
-    if (!isNotificationsSupported) {
-      setNotificationsEnabled(value);
-      localStorage.setItem("notificationsEnabled", value);
-      return;
-    }
-
-    let value = event.target.checked;
-    if (Notification.permission === "granted") {
-      setNotificationsEnabled(value);
-      localStorage.setItem("notificationsEnabled", value);
-    } else {
+    const setEnabled = (val) => {
+      setNotificationsEnabled(val);
+      localStorage.setItem("notificationsEnabled", val);
+    };
+    const value = event.target.checked;
+    if (
+      value &&
+      isNotificationsSupported &&
+      Notification.permission !== "granted"
+    ) {
       Notification.requestPermission(function (permission) {
         if (!("permission" in Notification)) {
           Notification.permission = permission;
         }
         if (permission === "granted") {
-          setNotificationsEnabled(value);
-          localStorage.setItem("notificationsEnabled", value);
+          setEnabled(value);
         }
       });
+    } else {
+      setEnabled(value);
     }
   };
 

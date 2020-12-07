@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import NavbarItem from "./NavbarItem/NavbarItem";
 import { createBrowserHistory } from "history";
 import { Router, Switch } from "react-router-dom";
