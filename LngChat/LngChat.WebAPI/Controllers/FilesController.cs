@@ -1,6 +1,9 @@
 ﻿using LngChat.Business.Services;
+using LngChat.WebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace LngChat.WebAPI.Controllers
@@ -18,9 +21,9 @@ namespace LngChat.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<string> UploadFile(string dataUrl)
+        public async Task<string> UploadFile(UploadFileModel file)
         {
-            return await _fileService.SaveDataUrlToFileAsync(dataUrl);
+            return await _fileService.SaveDataUrlToFileAsync(file.DataUrl);
         }
     }
 }

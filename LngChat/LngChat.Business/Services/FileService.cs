@@ -44,7 +44,7 @@ namespace LngChat.Business.Services
         public Task<string> SaveDataUrlToFileAsync(string dataUrl, Func<DataUrl, bool> dataUrlValidator = null)
         {
             if (!DataUrl.TryParse(dataUrl, out var parsedDataUrl)
-                || (dataUrlValidator == null && !dataUrlValidator.Invoke(parsedDataUrl)))
+                || (dataUrlValidator != null && !dataUrlValidator.Invoke(parsedDataUrl)))
             {
                 throw new ArgumentException($"The value is invalid or unsupported data url.", nameof(dataUrl));
             }

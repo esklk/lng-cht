@@ -1,9 +1,11 @@
 import { api } from "./apiService";
+import { fileService } from "./fileService";
 
 export const chatService = {
   getChatListAsync,
   getMessagesAsync,
   sendMessageToChatAsync,
+  uploadAttachmentAsync,
 };
 
 function getChatListAsync(limit, offset) {
@@ -38,4 +40,16 @@ function sendMessageToChatAsync(chatId, contentType, content) {
   return api
     .postAsync(`chats/${chatId}/messages`, { contentType, content })
     .then((response) => response.json());
+}
+
+function uploadAttachmentAsync(dataUrlToUpload) {
+  return new Promise((resolve, reject) =>
+    dataUrlToUpload && typeof dataUrlToUpload === "string"
+      ? resolve(dataUrlToUpload)
+      : reject(
+          new Error(
+            "Argument dataUrlToUpload must be a not empty data url string."
+          )
+        )
+  ).then((dataUrl) => fileService.uploadFileAsync(dataUrl));
 }

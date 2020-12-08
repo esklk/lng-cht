@@ -95,7 +95,7 @@ export default function Messages({
             ) : (
               i18n.hereAreNoMessagesYet
             )}
-            <MessageSender />
+            <MessageSender chatId={chatId} />
           </div>
         )
       ) : (

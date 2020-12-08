@@ -14,6 +14,7 @@ import Resizer from "react-image-file-resizer";
 import { Alert } from "@material-ui/lab";
 import { useVoiceRecorder } from "use-voice-recorder";
 import VoiceMessagePlayer from "../VoiceMessagePlayer/VoiceMessagePlayer";
+import { chatService } from "../../../../Shared/Services/chatService";
 
 const maximumImageCount = 10;
 const maximumFileSizeMB = 100;
@@ -35,7 +36,7 @@ const resizeImage = (file) =>
     );
   });
 
-export default function MessageSender({ onMessageSend }) {
+export default function MessageSender({ chatId }) {
   const messageInputRef = useRef();
   const [isLoading, setIsLoading] = useState();
   const {
@@ -100,7 +101,57 @@ export default function MessageSender({ onMessageSend }) {
   }, [isRecording]);
 
   const handleSendButtonClick = () => {
-    messageInputRef.current.value = null;
+    let sendMessagePromise;
+    if (voiceDataUrlToUpload) {
+      sendMessagePromise = chatService
+        .uploadAttachmentAsync(voiceDataUrlToUpload)
+        .then((attachmentUrl) =>
+          chatService.sendMessageToChatAsync(chatId, "voice", attachmentUrl)
+        );
+    } else if (imageDataUrlsToUpload.length > 0) {
+      sendMessagePromise = Promise.all(
+        imageDataUrlsToUpload.map((imageDataUrlToUpload) =>
+          chatService
+            .uploadAttachmentAsync(imageDataUrlToUpload)
+            .catch((error) => {
+              setError(i18n.somethingWentWrong);
+              console.error(error);
+            })
+            .then((attachmentUrl) => {
+              if (attachmentUrl) {
+                chatService.sendMessageToChatAsync(
+                  chatId,
+                  "image",
+                  attachmentUrl
+                );
+              }
+            })
+        )
+      );
+    } else if (messageInputRef.current && messageInputRef.current.value) {
+      sendMessagePromise = chatService.sendMessageToChatAsync(
+        chatId,
+        "text",
+        messageInputRef.current.value
+      );
+    }
+
+    if (sendMessagePromise) {
+      setIsLoading(true);
+      sendMessagePromise
+        .then(() => {
+          setVoiceDataUrlToUpload(null);
+          setImageDataUrlsToUpload([]);
+          if (messageInputRef.current) {
+            messageInputRef.current.value = null;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setError(i18n.somethingWentWrong);
+        })
+        .finally(() => setIsLoading(false));
+    }
   };
 
   const handleImageUploadingSelect = (imageList) => {
