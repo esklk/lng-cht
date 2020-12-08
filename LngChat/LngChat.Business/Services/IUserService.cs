@@ -13,6 +13,6 @@ namespace LngChat.Business.Services
 
         Task<UserModel> CreateUserAsync(UserModel userModel);
 
-        Task<UserModel[]> GetUsersAsync(UserFilterModel userFilterModel, params int[] userIdsToExclude);
+        Task<UserModel[]> GetUsersAsync(UserFilterModel userFilterModel, int currentUserId);
     }
 }

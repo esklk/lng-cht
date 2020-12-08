@@ -75,15 +75,17 @@ namespace LngChat.Business.Services
             return _mapper.Map<UserModel>(dbUser);
         }
 
-        public async Task<UserModel[]> GetUsersAsync(UserFilterModel userFilterModel, params int[] userIdsToExclude)
+        public async Task<UserModel[]> GetUsersAsync(UserFilterModel userFilterModel, int currentUserId)
         {
             var languageIds = await GetLanguageIdsAsync(userFilterModel.LanguagesToLearn, userFilterModel.LanguagesToTeach);
 
-            return languageIds.Any() 
+            return languageIds.Any()
                 ? await _mapper.ProjectTo<UserModel>(_context.Users
-                    .Where(x => !userIdsToExclude.Contains(x.Id) && x.Languages.Any(y => languageIds.Contains(y.Id)))
+                    .Where(x => x.Id != currentUserId
+                        && x.UserChats.Any(y => y.UserId == currentUserId)
+                        && x.Languages.Any(y => languageIds.Contains(y.Id)))
                     .Skip(userFilterModel.Offset)
-                    .Take(userFilterModel.Limit)).ToArrayAsync() 
+                    .Take(userFilterModel.Limit)).ToArrayAsync()
                 : Array.Empty<UserModel>();
         }
 
