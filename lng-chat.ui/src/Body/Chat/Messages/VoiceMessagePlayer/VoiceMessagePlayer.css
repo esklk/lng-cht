@@ -2,3 +2,6 @@
   display: flex;
   align-items: center;
 }
+.player-container .MuiLinearProgress-root{
+  width: 100%;
+}

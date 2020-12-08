@@ -38,6 +38,11 @@
   padding-bottom: 5px;
   padding-left: 5px;
 }
+@media (max-width: 700px){
+  .chat-header{
+    padding-top: 5px;
+  }
+}
 .chat-header p {
   margin: 0;
   padding: 0;
