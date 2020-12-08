@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import NavbarItem from "./NavbarItem/NavbarItem";
 import { createBrowserHistory } from "history";
 import { Router, Switch } from "react-router-dom";
@@ -11,8 +11,11 @@ import "./Body.css";
 import { useChat } from "../Shared/ChatContext";
 import toaster from "toasted-notes";
 import "toasted-notes/src/styles.css";
+import { accountService } from "../Shared/Services/accountService";
 
 export default function Body({ isUserNew }) {
+  const userId = useMemo(() => accountService.userId, []);
+
   const history = createBrowserHistory();
   useEffect(() => {
     if (window.location.pathname === "/") {
@@ -23,7 +26,9 @@ export default function Body({ isUserNew }) {
   const i18n = useI18n();
 
   useChat((message) => {
-    console.log(message);
+    if (message.senderId === userId) {
+      return;
+    }
     let notificationSetting = localStorage.getItem("notificationsEnabled");
     if (!notificationSetting || !JSON.parse(notificationSetting)) {
       return;

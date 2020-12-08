@@ -23,7 +23,7 @@ export default function MessageBubble({ userId, message, nextMessage }) {
       }`}
     >
       {message.isImage ? (
-        <img src={message.content} />
+        <img src={message.content} alt="content" />
       ) : message.isVoice ? (
         <div className="voice-message-player-container"><VoiceMessagePlayer src={message.content} /></div>
       ) : (

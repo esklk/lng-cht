@@ -10,6 +10,7 @@ import { EmojiPeopleRounded, SwapHorizRounded } from "@material-ui/icons";
 import React from "react";
 import { useI18n } from "../../../Shared/i18nContext";
 import { languageService } from "../../../Shared/Services/languageService";
+import { chatService } from "../../../Shared/Services/chatService";
 
 const languageLevels = languageService.getLanguageLevels();
 
@@ -59,13 +60,22 @@ const languageEntry = (code, level) => (
 );
 
 export default function UserEntry({
+  userId,
   firstName,
   lastName,
   languagesToTeach,
   languagesToLearn,
   profilePictureUrl,
+  onStartChatRequested,
 }) {
   const i18n = useI18n();
+
+  const handleSayHelloButtonClick = () => {
+    if (onStartChatRequested) {
+      onStartChatRequested(userId);
+    }
+  };
+
   const fullName = `${firstName} ${lastName}`;
   return (
     <div className="user-entry-container">
@@ -82,7 +92,7 @@ export default function UserEntry({
       </div>
       <Button>
         <EmojiPeopleRounded />
-        <span className="btn-hello-label">{i18n.sayHello}</span>
+        <span onClick={handleSayHelloButtonClick} className="btn-hello-label">{i18n.sayHello}</span>
       </Button>
     </div>
   );

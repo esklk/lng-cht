@@ -127,6 +127,9 @@ export class i18n {
   get youWillNotRecieveNotificationsAboutNewMessages() {
     return resources[this.#locale].youWillNotRecieveNotificationsAboutNewMessages;
   }
+  get hello() {
+    return resources[this.#locale].hello;
+  }
 }
 
 const resources = {
@@ -173,5 +176,6 @@ const resources = {
     notifications: "Notifications",
     youWillRecieveNotificationsAboutNewMessages: "You will recieve push-notifications about new messages",
     youWillNotRecieveNotificationsAboutNewMessages: "You will not recieve push-notifications about new messages",
+    hello: "Hello!"
   },
 };

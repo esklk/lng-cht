@@ -17,7 +17,7 @@ export default function Messages({
   onBackButtonClick,
   ...props
 }) {
-  const userId = parseInt(accountService.userId);
+  const userId = accountService.userId;
 
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);

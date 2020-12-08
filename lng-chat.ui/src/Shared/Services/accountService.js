@@ -10,9 +10,11 @@ export const accountService = {
       throw new Error("Access token is missing.");
     }
 
-    return jwt.decode(token)[
+    let decodedUserId = jwt.decode(token)[
       "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
     ];
+
+    return decodedUserId ? parseInt(decodedUserId) : null;
   },
   get accessToken() {
     var token = localStorage.getItem("accessToken");

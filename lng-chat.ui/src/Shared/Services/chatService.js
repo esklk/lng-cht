@@ -5,6 +5,7 @@ export const chatService = {
   getChatListAsync,
   getMessagesAsync,
   sendMessageToChatAsync,
+  sendMessageToUserAsync,
   uploadAttachmentAsync,
 };
 
@@ -39,6 +40,18 @@ function getMessagesAsync(chatId, limit, offset) {
 function sendMessageToChatAsync(chatId, contentType, content) {
   return api
     .postAsync(`chats/${chatId}/messages`, { contentType, content })
+    .then((response) => response.json());
+}
+
+function sendMessageToUserAsync(userId, contentType, content) {
+  let searchParams = new URLSearchParams();
+  searchParams.append("toUserId", userId);
+
+  return api
+    .postAsync("chats/messages?" + searchParams.toString(), {
+      contentType,
+      content,
+    })
     .then((response) => response.json());
 }
 

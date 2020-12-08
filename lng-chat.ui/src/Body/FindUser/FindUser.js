@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useI18n } from "../../Shared/i18nContext";
 import { userService } from "../../Shared/Services/userService";
 import UserEntry from "./UserEntry/UserEntry";
+import { chatService } from "../../Shared/Services/chatService";
 
 const limit = 20;
 
@@ -11,7 +12,7 @@ export default function FindUser() {
   const [isLoading, setIsLoading] = useState(true);
   const [langFilter, setLangFilter] = useState();
   // eslint-disable-next-line
-  const [page, setPage] = useState(0);//TODO: update page when scrolled to bottom
+  const [page, setPage] = useState(0); //TODO: update page when scrolled to bottom
   const [searchResults, setSearchResults] = useState([]);
   const i18n = useI18n();
 
@@ -56,20 +57,33 @@ export default function FindUser() {
 
   //TODO: add page update by scroll
 
+  const handleStartChatRequest = (userId) => {
+    if (!userId) {
+      throw new Error("UserId is required.");
+    }
+    chatService
+      .sendMessageToUserAsync(userId, "text", i18n.hello)
+      .then(() =>
+        setSearchResults((prev) => prev.filter((user) => user.id !== userId))
+      );
+  };
+
   return isLoading ? (
     <div className="search-results-loader-container">
       <CircularProgress />
     </div>
-  ) : searchResults ? (
+  ) : searchResults && searchResults.length > 0 ? (
     <div className="search-results-container">
       {searchResults.map((user) => (
         <UserEntry
           key={user.id}
+          userId={user.id}
           firstName={user.firstName}
           lastName={user.lastName}
           profilePictureUrl={user.profilePictureUrl}
           languagesToLearn={user.languagesToLearn}
           languagesToTeach={user.languagesToTeach}
+          onStartChatRequested={handleStartChatRequest}
         />
       ))}
     </div>
