@@ -2,7 +2,8 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using LngChat.Business.Services;
-using LngChat.WebAPI.Utils;
+using LngChat.WebAPI.Utils.Auth;
+using LngChat.WebAPI.Utils.Auth.TokenValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LngChat.WebAPI.Controllers

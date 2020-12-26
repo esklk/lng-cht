@@ -6,10 +6,11 @@ using LngChat.WebAPI.Extensions;
 using LngChat.WebAPI.Hubs.Chat;
 using LngChat.WebAPI.Settings;
 using LngChat.WebAPI.Utils;
+using LngChat.WebAPI.Utils.Auth;
+using LngChat.WebAPI.Utils.Auth.TokenValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,7 @@ namespace LngChat.WebAPI
     {
         private const string AllowSpecificOrigins = "AllowSpecificOrigins";
         private const string ChatHubAddress = "/chat";
+        private const string TokenProviderHeaderName = "Token-Provider";
 
         public Startup(IConfiguration configuration)
         {
@@ -85,13 +87,14 @@ namespace LngChat.WebAPI
                 .AddSingleton<IAccessTokenGenerator, JwtAccessTokenGenerator>()
                 .AddSingleton(googleOAuthCredentials)
                 .AddScoped<ICurrentUserInfoProvider, ClaimsCurrentUserInfoProvider>()
-                .AddScoped<ITokenValidator, GoogleTokenValidator>()
+                .AddScoped<ITokenValidatorsFactory>(x => new TokenValidatorsFactory(x.GetRequiredHttpHeader(TokenProviderHeaderName)))
+                .AddScoped(x => x.GetRequiredService<ITokenValidatorsFactory>().Create(x.GetRequiredService<OAuthCredentials>()))
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IChatService, ChatService>()
                 .AddScoped<IFileService>(x =>
                     {
                         var env = x.GetRequiredService<IWebHostEnvironment>();
-                        var request = x.GetRequiredService<IHttpContextAccessor>().HttpContext.Request;
+                        var request = x.GetHttpRequest();
 
                         return new FileService(env.WebRootPath, $"{request.Scheme}://{request.Host.Value}/");
                     });

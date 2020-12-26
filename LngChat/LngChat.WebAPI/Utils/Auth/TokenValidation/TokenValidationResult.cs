@@ -1,4 +1,4 @@
-﻿namespace LngChat.WebAPI.Utils
+﻿namespace LngChat.WebAPI.Utils.Auth.TokenValidation
 {
     public class TokenValidationResult
     {

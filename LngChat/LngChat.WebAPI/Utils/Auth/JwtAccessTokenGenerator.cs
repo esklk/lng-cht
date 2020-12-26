@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace LngChat.WebAPI.Utils
+namespace LngChat.WebAPI.Utils.Auth
 {
     public class JwtAccessTokenGenerator : IAccessTokenGenerator
     {

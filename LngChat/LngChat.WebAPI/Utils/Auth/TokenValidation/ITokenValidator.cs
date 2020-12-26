@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace LngChat.WebAPI.Utils
+namespace LngChat.WebAPI.Utils.Auth.TokenValidation
 {
     public interface ITokenValidator
     {

@@ -2,7 +2,7 @@
 using LngChat.WebAPI.Settings;
 using System.Threading.Tasks;
 
-namespace LngChat.WebAPI.Utils
+namespace LngChat.WebAPI.Utils.Auth.TokenValidation
 {
     public class GoogleTokenValidator : ITokenValidator
     {

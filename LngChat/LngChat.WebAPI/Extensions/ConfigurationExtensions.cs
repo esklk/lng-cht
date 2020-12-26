@@ -1,9 +1,7 @@
 ﻿using LngChat.WebAPI.Settings;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace LngChat.WebAPI.Extensions
 {
@@ -22,6 +20,9 @@ namespace LngChat.WebAPI.Extensions
             .GetChildren()
             .ToDictionary(k => k.Key, e => e.Get<OAuthCredentials>())
             .GetValueOrDefault(provider) ?? throw new KeyNotFoundException($"Can not find OAuth credentials with {provider} provider.");
+
+        public static Dictionary<string, OAuthCredentials> GetOAuthCredentials(this IConfiguration configuration, params string[] providers) => providers
+            .ToDictionary(provider => provider, provider => configuration.GetOAuthCredentials(provider));
 
         public static DatabaseConfiguration GetDatabaseConfiguration(this IConfiguration configuration, string name) => configuration
             .GetSection("DatabaseConfiguration")

@@ -2,7 +2,7 @@ import { api } from "./apiService";
 var jwt = require("jsonwebtoken");
 
 export const accountService = {
-  authenticate,
+  loginWithGoogle,
   logout,
   get userId() {
     var token = localStorage.getItem("accessToken");
@@ -32,9 +32,9 @@ export const accountService = {
   },
 };
 
-function authenticate(token) {
+function loginWithGoogle(token) {
   return api
-    .getAsync("auth", { token }, true)
+    .getAsync("auth", { token }, { "Token-Provider": "Google" }, true)
     .then((response) => {
       return response.json().then((authData) => {
         authData.isNew = response.status === 201;

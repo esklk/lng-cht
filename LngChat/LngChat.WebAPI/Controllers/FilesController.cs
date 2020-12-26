@@ -2,8 +2,6 @@
 using LngChat.WebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace LngChat.WebAPI.Controllers

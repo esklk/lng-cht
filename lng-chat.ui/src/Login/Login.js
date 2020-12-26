@@ -14,7 +14,7 @@ export default function Login({ onAuthenticated }) {
   const responseGoogle = (response) => {
     if (response && response.tokenId) {
       setIsLoading(true);
-      accountService.authenticate(response.tokenId).then((authData) => {
+      accountService.loginWithGoogle(response.tokenId).then((authData) => {
         setIsLoading(false);
         if (!authData) {
           setErrorMessage(i18n.failedToSignIn);
