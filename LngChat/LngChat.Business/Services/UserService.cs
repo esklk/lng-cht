@@ -79,14 +79,19 @@ namespace LngChat.Business.Services
         {
             var languageIds = await GetLanguageIdsAsync(userFilterModel.LanguagesToLearn, userFilterModel.LanguagesToTeach);
 
-            return languageIds.Any()
-                ? await _mapper.ProjectTo<UserModel>(_context.Users
+            if (languageIds.Any())
+            {
+                var query = _context.Users
                     .Where(x => x.Id != currentUserId
-                        && x.UserChats.Any(y => y.UserId == currentUserId)
+                        && x.UserChats.All(y => y.UserId != currentUserId)
                         && x.Languages.Any(y => languageIds.Contains(y.Id)))
                     .Skip(userFilterModel.Offset)
-                    .Take(userFilterModel.Limit)).ToArrayAsync()
-                : Array.Empty<UserModel>();
+                    .Take(userFilterModel.Limit);
+
+                    return await _mapper.ProjectTo<UserModel>(query).ToArrayAsync();
+            }
+
+            return Array.Empty<UserModel>();
         }
 
         private async Task<int[]> GetLanguageIdsAsync(LanguageFilterModel[] languagesToLearn, LanguageFilterModel[] languagesToTeach)

@@ -7,6 +7,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import RateableCheckboxList from "./RateableCheckboxList/RateableCheckboxList";
 import { FormLabel } from "@material-ui/core";
 import "./RateableCheckboxListInput.css";
+import { useI18n } from "../../../Shared/i18nContext";
 
 export default function RateableCheckboxListInput({
   items,
@@ -15,6 +16,7 @@ export default function RateableCheckboxListInput({
   onApply,
   className,
   tip,
+  placeholderText
 }) {
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -47,6 +49,8 @@ export default function RateableCheckboxListInput({
     <FormLabel component="legend">{label}</FormLabel>
   ) : null;
 
+  const i18n = useI18n();
+
   return (
     <div className={className}>
       {labelElement}
@@ -60,7 +64,7 @@ export default function RateableCheckboxListInput({
                   marks.find((mark) => mark.value === item.rate).label
                 }`
             )
-            .join("; ") || "No language selected"}
+            .join("; ") || placeholderText}
         </span>
       </Button>
       <Dialog
@@ -86,8 +90,8 @@ export default function RateableCheckboxListInput({
         </DialogContent>
         <DialogActions>
           <p className="dialog-tip">{tip}</p>
-          <Button onClick={handleCancelClick}>Cancel</Button>
-          <Button onClick={handleOkClick}>Ok</Button>
+          <Button onClick={handleCancelClick}>{i18n.cancel}</Button>
+          <Button onClick={handleOkClick}>{i18n.ok}</Button>
         </DialogActions>
       </Dialog>
     </div>

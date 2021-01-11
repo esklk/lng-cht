@@ -130,6 +130,15 @@ export class i18n {
   get hello() {
     return resources[this.#locale].hello;
   }
+  get ok() {
+    return resources[this.#locale].ok;
+  }
+  get cancel() {
+    return resources[this.#locale].cancel;
+  }
+  get noLanguageSelected() {
+    return resources[this.#locale].noLanguageSelected;
+  }
 }
 
 const resources = {
@@ -176,6 +185,57 @@ const resources = {
     notifications: "Notifications",
     youWillRecieveNotificationsAboutNewMessages: "You will recieve push-notifications about new messages",
     youWillNotRecieveNotificationsAboutNewMessages: "You will not recieve push-notifications about new messages",
-    hello: "Hello!"
+    hello: "Hello!",
+    ok: "OK",
+    cancel: "Cancel",
+    noLanguageSelected: "No language selected"
+  },
+  ru: {
+    find: "Найти",
+    chat: "Чат",
+    settings: "Настройки",
+    profileSettings: "Настройки профиля",
+    applicationSettings: "Настройки приложения",
+    firstName: "Имя",
+    lastName: "Фамилия",
+    languagesToLearn: "Языки для изучения",
+    languagesToTeach: "Языки для обучения",
+    save: "Сохранить",
+    changesWillBeAppliedAfterPageReload:
+      "Изменения будут применены после перезагрузки страницы.",
+    colorScheme: "Цветовой режим",
+    dark: "Темный",
+    light: "Светлый",
+    interfaceLanguage: "Язык интерфейса",
+    signIn: "Войти",
+    failedToSignIn: "Не удалось войти",
+    isRequired: "обязательно",
+    failedToSaveData: "Не удалось сохранить данные",
+    singOut: "Выйти",
+    sayHello: "Сказать привет",
+    aFewWordsAboutYou: "Несколько слов о себе",
+    somethingWentWrong: "Что-то пошло не так :(",
+    nothingCouldBeFound: "Здесь пока ничего нет :(",
+    iNeedHelpToRecognizeMyLevel: "Мне нужна помощь в определении уровня",
+    wikipediaCefrLevelsUrl:
+      "https://ru.wikipedia.org/wiki/Общеевропейские_компетенции_владения_иностранным_языком#Уровни",
+    hereAreNoMessagesYet: "Здесь пока нет сообщений",
+    typeAMessage: "Сообщение...",
+    pleaseSelectAChat: "Выберете чат пожалуйста",
+    numberOfSelectedImagesExceedsAllowed:
+      "Максимальное число картинок для загрузки",
+    selectedImageSizeExceedsAllowed: "Максимальный размер картинок для загрузки",
+    pleaseWait: "ПОжалуйста подождите ...",
+    speakPlease: "Говорите пожалуйста ...",
+    newMessage: "Новое сообщение",
+    voiceMessage: "Голосовое сообщение",
+    picture: "Картинка",
+    notifications: "Уведомления",
+    youWillRecieveNotificationsAboutNewMessages: "Вы будете получать увдомления о новых сообщениях",
+    youWillNotRecieveNotificationsAboutNewMessages: "Вы не будете получать увдомления о новых сообщениях",
+    hello: "Привет!",
+    ok: "OK",
+    cancel: "Отмена",
+    noLanguageSelected: "Ничего не выбрано"
   },
 };

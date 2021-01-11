@@ -284,6 +284,7 @@ export default function Settings() {
               marks={languageLevelMarks}
               onApply={handleLangsToLearnApply}
               tip={languageLevelTip}
+              placeholderText={i18n.noLanguageSelected}
             />
             <RateableCheckboxListInput
               className="row-input"
@@ -292,6 +293,7 @@ export default function Settings() {
               marks={languageLevelMarks}
               onApply={handleLangsToTeachApply}
               tip={languageLevelTip}
+              placeholderText={i18n.noLanguageSelected}
             />
             <br />
             <Button
